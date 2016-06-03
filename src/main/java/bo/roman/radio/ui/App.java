@@ -8,7 +8,9 @@ import bo.roman.radio.player.listener.Observer;
 import bo.roman.radio.player.model.CodecInformation;
 import bo.roman.radio.player.model.RadioPlayerEntity;
 import bo.roman.radio.ui.controller.CoverDisplayerController;
-import bo.roman.radio.ui.controller.observers.AlbumObserver;
+import bo.roman.radio.ui.controller.events.UpdateCoverEvent;
+import bo.roman.radio.ui.controller.events.UpdateLabelsEvent;
+import bo.roman.radio.ui.controller.observers.RadioInfoObserver;
 import bo.roman.radio.ui.controller.observers.CodecObeserver;
 import bo.roman.radio.ui.controller.observers.CoverArtObserver;
 import javafx.application.Application;
@@ -58,10 +60,14 @@ public class App extends Application {
 			draggable(rootLayout);
 
 			// Add Observers
-			List<Observer<RadioPlayerEntity>> playerEntityObservers = Arrays.asList(new CoverArtObserver(rootLayout), new AlbumObserver());
-			List<Observer<CodecInformation>> codecObservers = Arrays.asList(new CodecObeserver());
+			List<Observer<RadioPlayerEntity>> playerEntityObservers = Arrays.asList(new CoverArtObserver(rootLayout), new RadioInfoObserver(rootLayout));
+			List<Observer<CodecInformation>> codecObservers = Arrays.asList(new CodecObeserver(rootLayout));
 			
 			controller.addObservers(playerEntityObservers, codecObservers);
+			
+			// Add Event Handlers
+			rootLayout.addEventHandler(UpdateCoverEvent.UPDATE_IMAGE, event -> controller.updateCoverArt(event.getImageUrl()));
+			rootLayout.addEventHandler(UpdateLabelsEvent.UPDATE_LABELS, event -> controller.updateLabels(event.getCodecInfo(), event.getRadioInfo()));
 
 			Scene scene = new Scene(rootLayout);
 			scene.setFill(Color.TRANSPARENT);

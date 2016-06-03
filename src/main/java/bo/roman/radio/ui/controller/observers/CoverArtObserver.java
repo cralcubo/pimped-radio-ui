@@ -15,15 +15,16 @@ import javafx.scene.Node;
 public class CoverArtObserver implements Observer<RadioPlayerEntity> {
 	private static final String DEFAULTLOGO_PATH = "src/main/resources/pimped-radio-glossy.jpeg";
 	
-	private Node node;
+	private final Node node;
+	private final UpdateCoverEvent event;
 	
 	public CoverArtObserver(Node node) {
 		this.node = node;
+		event = new UpdateCoverEvent(UpdateCoverEvent.UPDATE_IMAGE);
 	}
-
+	
 	@Override
 	public void update(RadioPlayerEntity rpe) {
-		UpdateCoverEvent event = new UpdateCoverEvent(UpdateCoverEvent.UPDATE_IMAGE);
 		Optional<URI> ca = rpe.getAlbum()
 				.flatMap(Album::getCoverArt)
 				.flatMap(CoverArt::getLargeUri);

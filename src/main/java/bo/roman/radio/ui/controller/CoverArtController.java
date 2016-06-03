@@ -47,4 +47,8 @@ public class CoverArtController implements Initializable {
 		fader.fadeNode(0.5, 0, coverShader);
 	}
 
+	public void setImage(String uri) {
+		coverViewer.setImage(new Image(uri));
+	}
+
 }

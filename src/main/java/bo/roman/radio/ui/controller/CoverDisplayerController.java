@@ -66,5 +66,13 @@ public class CoverDisplayerController {
 	public void addObservers(List<Observer<RadioPlayerEntity>> playerEntityObservers, List<Observer<CodecInformation>> codecObservers) {
 		radioPlayerController.addObservers(playerEntityObservers, codecObservers);
 	}
+
+	public void updateCoverArt(String uri) {
+		coverArtController.setImage(uri);
+	}
+
+	public void updateLabels(CodecInformation codecInfo, RadioPlayerEntity radioInfo) {
+		
+	}
 	
 }
