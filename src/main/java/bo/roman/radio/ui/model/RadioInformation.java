@@ -1,26 +1,35 @@
 package bo.roman.radio.ui.model;
 
 public class RadioInformation {
-	private final String songName;
-	private final String artistName;
-	private final String extra;
+	private final String mainInfo;
+	private final String subInfo;
+	private final String extraInfo;
 	
-	public RadioInformation(String songName, String artistName, String extra) {
-		this.songName = songName;
-		this.artistName = artistName;
-		this.extra = extra;
+	public RadioInformation(String mainInfo, String subInfo, String extraInfo) {
+		this.mainInfo = mainInfo;
+		this.subInfo = subInfo;
+		this.extraInfo = extraInfo;
+	}
+	
+	public RadioInformation(String mainInfo) {
+		this(mainInfo, "", "");
 	}
 
-	public String getSongName() {
-		return songName;
+	public String getMainInfo() {
+		return mainInfo;
 	}
 
-	public String getArtistName() {
-		return artistName;
+	public String getSubInfo() {
+		return subInfo;
 	}
 
-	public String getExtra() {
-		return extra;
+	public String getExtraInfo() {
+		return extraInfo;
+	}
+
+	@Override
+	public String toString() {
+		return "RadioInformation [mainInfo=" + mainInfo + ", subInfo=" + subInfo + ", extraInfo=" + extraInfo + "]";
 	}
 
 }

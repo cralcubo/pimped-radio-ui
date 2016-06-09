@@ -41,18 +41,18 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label id="codecLabel" prefHeight="17.0" prefWidth="233.0" text="ACC | 320 kbps | 44.1 kHz | Stereo" textAlignment="CENTER" textFill="#a1a1a1">
+                  <Label id="codecLabel" fx:id="codecLabel" prefHeight="17.0" prefWidth="233.0" text="ACC | 320 kbps | 44.1 kHz | Stereo" textAlignment="CENTER" textFill="#a1a1a1">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Label>
-                  <Button fx:id="close" mnemonicParsing="false" prefHeight="27.0" prefWidth="42.0" text="x" GridPane.columnIndex="1" />
+                  <Button fx:id="close" mnemonicParsing="false" onAction="#closeAction" prefHeight="27.0" prefWidth="42.0" text="x" GridPane.columnIndex="1" />
                </children>
             </GridPane>
             <Pane prefHeight="70.0" prefWidth="258.0" GridPane.rowIndex="1">
                <children>
-                  <Label id="artistLabel" prefHeight="17.0" prefWidth="260.0" text="Artist" textFill="#a1a1a1" />
-                  <Label id="songLabel" prefHeight="43.0" prefWidth="260.0" text="Song" textFill="#a1a1a1">
+                  <Label id="subLabel" fx:id="subLabel" prefHeight="17.0" prefWidth="260.0" text="Artist" textFill="#a1a1a1" />
+                  <Label id="mainLabel" fx:id="mainLabel" prefHeight="43.0" prefWidth="260.0" text="Song" textFill="#a1a1a1">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -60,7 +60,7 @@
                         <Insets top="20.0" />
                      </padding>
                   </Label>
-                  <Label id="albumLabel" prefHeight="70.0" prefWidth="260.0" text="Album" textFill="#a1a1a1">
+                  <Label id="extraLabel" fx:id="extraLabel" prefHeight="70.0" prefWidth="260.0" text="Album" textFill="#a1a1a1">
                      <padding>
                         <Insets top="40.0" />
                      </padding>
@@ -80,8 +80,8 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <ToggleButton fx:id="play" mnemonicParsing="false" text="ToggleButton" GridPane.columnIndex="1" />
-                  <Slider fx:id="volume" prefHeight="38.0" prefWidth="108.0" value="100.0" GridPane.columnIndex="2">
+                  <ToggleButton fx:id="play" mnemonicParsing="false" onAction="#playButtonAction" text="play" GridPane.columnIndex="1" />
+                  <Slider fx:id="volume" onMouseReleased="#volumeAction" prefHeight="38.0" prefWidth="108.0" value="100.0" GridPane.columnIndex="2">
                      <GridPane.margin>
                         <Insets bottom="15.0" left="10.0" right="10.0" top="20.0" />
                      </GridPane.margin>

@@ -1,5 +1,7 @@
 package bo.roman.radio.ui.controller.events;
 
+import java.util.Optional;
+
 import javafx.event.Event;
 import javafx.event.EventType;
 
@@ -8,17 +10,18 @@ public class UpdateCoverEvent extends Event {
 
 	public static final EventType<UpdateCoverEvent> UPDATE_IMAGE = new EventType<>("UPDATE_COVER");
 	
-	private String imageUrl;
+	private Optional<String> imageUrl;
 
 	public UpdateCoverEvent(EventType<? extends Event> eventType) {
 		super(eventType);
+		imageUrl = Optional.empty();
 	}
 	
-	public String getImageUrl() {
+	public Optional<String> getImageUrl() {
 		return imageUrl;
 	}
 	
-	public void setImageUrl(String imageUrl) {
+	public void setImageUrl(Optional<String> imageUrl) {
 		this.imageUrl = imageUrl;
 	}
 }

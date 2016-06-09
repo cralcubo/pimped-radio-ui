@@ -1,4 +1,4 @@
-package bo.roman.radio.ui.controller;
+package bo.roman.radio.ui.controller.util;
 
 import javafx.animation.FadeTransition;
 import javafx.scene.Node;

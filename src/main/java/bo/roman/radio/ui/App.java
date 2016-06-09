@@ -10,9 +10,9 @@ import bo.roman.radio.player.model.RadioPlayerEntity;
 import bo.roman.radio.ui.controller.CoverDisplayerController;
 import bo.roman.radio.ui.controller.events.UpdateCoverEvent;
 import bo.roman.radio.ui.controller.events.UpdateLabelsEvent;
-import bo.roman.radio.ui.controller.observers.RadioInfoObserver;
 import bo.roman.radio.ui.controller.observers.CodecObeserver;
 import bo.roman.radio.ui.controller.observers.CoverArtObserver;
+import bo.roman.radio.ui.controller.observers.RadioInfoObserver;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -58,16 +58,25 @@ public class App extends Application {
 
 			// Make root pane draggable
 			draggable(rootLayout);
-
-			// Add Observers
-			List<Observer<RadioPlayerEntity>> playerEntityObservers = Arrays.asList(new CoverArtObserver(rootLayout), new RadioInfoObserver(rootLayout));
-			List<Observer<CodecInformation>> codecObservers = Arrays.asList(new CodecObeserver(rootLayout));
 			
-			controller.addObservers(playerEntityObservers, codecObservers);
+			Observer<RadioPlayerEntity> printer = (rpe) -> {
+				System.out.println("****************************");
+				System.out.println("****************************");
+				rpe.getRadio().ifPresent(r -> System.out.println(r));
+				rpe.getSong().ifPresent(s -> System.out.println(s));
+				rpe.getAlbum().ifPresent(a -> System.out.println(a));
+				System.out.println("****************************");
+				System.out.println("****************************");
+			};
 			
 			// Add Event Handlers
 			rootLayout.addEventHandler(UpdateCoverEvent.UPDATE_IMAGE, event -> controller.updateCoverArt(event.getImageUrl()));
 			rootLayout.addEventHandler(UpdateLabelsEvent.UPDATE_LABELS, event -> controller.updateLabels(event.getCodecInfo(), event.getRadioInfo()));
+			
+			// Add Observers
+			List<Observer<RadioPlayerEntity>> playerEntityObservers = Arrays.asList(printer, new CoverArtObserver(rootLayout), new RadioInfoObserver(rootLayout));
+			List<Observer<CodecInformation>> codecObservers = Arrays.asList(new CodecObeserver(rootLayout));
+			controller.addObservers(playerEntityObservers, codecObservers);
 
 			Scene scene = new Scene(rootLayout);
 			scene.setFill(Color.TRANSPARENT);
