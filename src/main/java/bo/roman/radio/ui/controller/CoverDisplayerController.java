@@ -7,6 +7,8 @@ import java.util.Optional;
 import bo.roman.radio.player.listener.Observer;
 import bo.roman.radio.player.model.CodecInformation;
 import bo.roman.radio.player.model.RadioPlayerEntity;
+import bo.roman.radio.ui.App;
+import bo.roman.radio.ui.business.RadioStreamManager;
 import bo.roman.radio.ui.controller.util.NodeFader;
 import bo.roman.radio.ui.model.RadioInformation;
 import javafx.fxml.FXML;
@@ -28,7 +30,9 @@ public class CoverDisplayerController {
 	
 	private static final double MAXOPACITY_INFO = 1.0;
 	private static final double MINOPACITY_INFO = 0.0;
-
+	
+	private App mainApp;
+	
 	@FXML
 	private ImageView coverViewer;
 	@FXML
@@ -85,8 +89,15 @@ public class CoverDisplayerController {
 	
 	@FXML
 	private void playButtonAction() {
-		String station = "http://195.154.182.222:27147/973";
+		String station = RadioStreamManager.getLastStream();
 		radioPlayerController.playAction(station);
+	}
+	
+	@FXML
+	private void loadStreamAction() {
+		if(mainApp != null) {
+			mainApp.showInputStreamDialog();
+		}
 	}
 	
 	@FXML
@@ -109,6 +120,10 @@ public class CoverDisplayerController {
 
 	public void updateLabels(Optional<CodecInformation> codecInfo, Optional<RadioInformation> radioInfo) {
 		labelsController.updateLabels(codecInfo, radioInfo);
+	}
+	
+	public void setMainApp(App mainApp) {
+		this.mainApp = mainApp;
 	}
 	
 }

@@ -8,6 +8,7 @@ import bo.roman.radio.player.listener.Observer;
 import bo.roman.radio.player.model.CodecInformation;
 import bo.roman.radio.player.model.RadioPlayerEntity;
 import bo.roman.radio.ui.controller.CoverDisplayerController;
+import bo.roman.radio.ui.controller.StreamInputController;
 import bo.roman.radio.ui.controller.events.UpdateCoverEvent;
 import bo.roman.radio.ui.controller.events.UpdateLabelsEvent;
 import bo.roman.radio.ui.controller.observers.CodecObeserver;
@@ -18,9 +19,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -51,6 +54,7 @@ public class App extends Application {
 		try {
 			rootLayout = loader.load();
 			CoverDisplayerController controller = loader.getController();
+			controller.setMainApp(this);
 			
 			// Clip the root pane
 			Rectangle rectangle = controller.getCoverShader();
@@ -113,5 +117,26 @@ public class App extends Application {
 
 		coverDisplayer.setClip(clip);
 	}
-
+	
+	public void showInputStreamDialog() {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(App.class.getResource("view/StreamInput.fxml"));
+		try {
+			HBox dialogBox = loader.load();
+			
+			Stage stage = new Stage();
+			stage.setTitle("Set Radio Stream");
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.initOwner(primaryStage);
+    		Scene scene = new Scene(dialogBox);
+    		stage.setScene(scene);
+    		
+    		StreamInputController controller = loader.getController();
+    		controller.setDialogStage(stage);
+    		
+    		stage.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
