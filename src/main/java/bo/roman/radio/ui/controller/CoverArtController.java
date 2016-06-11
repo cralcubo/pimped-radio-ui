@@ -56,7 +56,6 @@ public class CoverArtController implements Initializable {
 
 	public void setImage(Optional<String> uri) {
 		coverViewer.setImage(new Image(uri.orElse(defaultLogoUri)));
-//		Platform.runLater(() -> coverViewer.setImage(new Image(uri.orElse(defaultLogoUri))));
 	}
 
 }

@@ -11,7 +11,7 @@ import bo.roman.radio.ui.controller.events.UpdateLabelsEvent;
 import javafx.scene.Node;
 
 public class CodecObeserver implements Observer<CodecInformation> {
-	private final static Logger loggger = LoggerFactory.getLogger(CodecObeserver.class);
+	private final static Logger logger = LoggerFactory.getLogger(CodecObeserver.class);
 	
 	private final Node node;
 	private final UpdateLabelsEvent event;
@@ -23,7 +23,7 @@ public class CodecObeserver implements Observer<CodecInformation> {
 
 	@Override
 	public void update(CodecInformation codecInformation) {
-		loggger.info("Updating CodecInformation with Entity {}", codecInformation);
+		logger.info("Updating CodecInformation with Entity {}", codecInformation);
 		event.setCodecInfo(Optional.of(codecInformation));
 		node.fireEvent(event);
 	}

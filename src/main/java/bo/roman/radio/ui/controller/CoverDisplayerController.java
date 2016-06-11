@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import bo.roman.radio.player.listener.Observer;
 import bo.roman.radio.player.model.CodecInformation;
+import bo.roman.radio.player.model.ErrorInformation;
 import bo.roman.radio.player.model.RadioPlayerEntity;
 import bo.roman.radio.ui.App;
 import bo.roman.radio.ui.business.RadioStreamManager;
@@ -22,14 +23,14 @@ import javafx.scene.shape.Rectangle;
 
 public class CoverDisplayerController {
 	
-	private final NodeFader fader = new NodeFader(200);
-	
 	private CoverArtController coverArtController;
 	private RadioPlayerController radioPlayerController;
 	private LabelsController labelsController;
 	
 	private static final double MAXOPACITY_INFO = 1.0;
 	private static final double MINOPACITY_INFO = 0.0;
+	
+	private final NodeFader fader = new NodeFader(200);
 	
 	private App mainApp;
 	
@@ -110,8 +111,8 @@ public class CoverDisplayerController {
 		return coverShader;
 	}
 	
-	public void addObservers(List<Observer<RadioPlayerEntity>> playerEntityObservers, List<Observer<CodecInformation>> codecObservers) {
-		radioPlayerController.addObservers(playerEntityObservers, codecObservers);
+	public void addObservers(List<Observer<RadioPlayerEntity>> playerEntityObservers, List<Observer<CodecInformation>> codecObservers, List<Observer<ErrorInformation>> errorObservers) {
+		radioPlayerController.addObservers(playerEntityObservers, codecObservers, errorObservers);
 	}
 
 	public void updateCoverArt(Optional<String> uri) {
@@ -120,6 +121,11 @@ public class CoverDisplayerController {
 
 	public void updateLabels(Optional<CodecInformation> codecInfo, Optional<RadioInformation> radioInfo) {
 		labelsController.updateLabels(codecInfo, radioInfo);
+	}
+	
+	public void reportError(ErrorInformation e) {
+		radioPlayerController.stop();
+		labelsController.reportError(e);
 	}
 	
 	public void setMainApp(App mainApp) {

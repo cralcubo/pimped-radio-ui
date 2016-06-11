@@ -7,6 +7,7 @@ import bo.roman.radio.player.RadioPlayer;
 import bo.roman.radio.player.listener.Observer;
 import bo.roman.radio.player.listener.RadioPlayerEventListener;
 import bo.roman.radio.player.model.CodecInformation;
+import bo.roman.radio.player.model.ErrorInformation;
 import bo.roman.radio.player.model.RadioPlayerEntity;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
@@ -33,8 +34,8 @@ public class RadioPlayerController implements Initializable {
 		radioPlayer.setVolume(MAX_VOL);
 	}
 
-	public void addObservers(List<Observer<RadioPlayerEntity>> playerEntityObservers, List<Observer<CodecInformation>> codecObservers) {
-		MediaPlayerEventAdapter eventsAdapter = new RadioPlayerEventListener(playerEntityObservers, codecObservers);
+	public void addObservers(List<Observer<RadioPlayerEntity>> playerEntityObservers, List<Observer<CodecInformation>> codecObservers, List<Observer<ErrorInformation>> errorObservers) {
+		MediaPlayerEventAdapter eventsAdapter = new RadioPlayerEventListener(playerEntityObservers, codecObservers, errorObservers);
 		radioPlayer.addEventsListener(eventsAdapter);
 	}
 
@@ -52,5 +53,10 @@ public class RadioPlayerController implements Initializable {
 
 	public void close() {
 		radioPlayer.close();
+	}
+	
+	public void stop() {
+		radioPlayer.stop();
+		play.setSelected(true);
 	}
 }

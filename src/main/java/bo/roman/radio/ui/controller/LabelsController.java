@@ -3,12 +3,15 @@ package bo.roman.radio.ui.controller;
 import java.util.Optional;
 
 import bo.roman.radio.player.model.CodecInformation;
+import bo.roman.radio.player.model.ErrorInformation;
 import bo.roman.radio.ui.model.RadioInformation;
 import bo.roman.radio.utilities.StringUtils;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 
 public class LabelsController implements Initializable {
+	private static final String STOP_MSG = "Stoping RadioPlayer.";
+	
 	private Label mainLabel;
 	private Label subLabel;
 	private Label extraLabel;
@@ -38,6 +41,14 @@ public class LabelsController implements Initializable {
 		// acc | 320 kbps | 44.1 kHz | Stereo
 		String codecInfo = String.format("%s | %d kbps | %.1f kHz | %s", codecTranslator(ci.getCodec()), Math.round(ci.getBitRate()), ci.getSampleRate(), channelsTranslator(ci.getChannels()));
 		Platform.runLater(() -> codecLabel.setText(codecInfo));
+	}
+	
+	public void reportError(ErrorInformation e) {
+		Platform.runLater(() -> {
+			mainLabel.setText(e.getSource());
+			subLabel.setText(e.getMessage());
+			extraLabel.setText(STOP_MSG);
+		});
 	}
 
 	private void updateRadioInfoLabels(RadioInformation ri) {

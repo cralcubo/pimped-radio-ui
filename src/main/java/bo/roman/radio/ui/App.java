@@ -6,13 +6,16 @@ import java.util.List;
 
 import bo.roman.radio.player.listener.Observer;
 import bo.roman.radio.player.model.CodecInformation;
+import bo.roman.radio.player.model.ErrorInformation;
 import bo.roman.radio.player.model.RadioPlayerEntity;
 import bo.roman.radio.ui.controller.CoverDisplayerController;
 import bo.roman.radio.ui.controller.StreamInputController;
+import bo.roman.radio.ui.controller.events.ReportErrorEvent;
 import bo.roman.radio.ui.controller.events.UpdateCoverEvent;
 import bo.roman.radio.ui.controller.events.UpdateLabelsEvent;
 import bo.roman.radio.ui.controller.observers.CodecObeserver;
 import bo.roman.radio.ui.controller.observers.CoverArtObserver;
+import bo.roman.radio.ui.controller.observers.ErrorObserver;
 import bo.roman.radio.ui.controller.observers.RadioInfoObserver;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -73,14 +76,16 @@ public class App extends Application {
 				System.out.println("****************************");
 			};
 			
-			// Add Event Handlers
-			rootLayout.addEventHandler(UpdateCoverEvent.UPDATE_IMAGE, event -> controller.updateCoverArt(event.getImageUrl()));
-			rootLayout.addEventHandler(UpdateLabelsEvent.UPDATE_LABELS, event -> controller.updateLabels(event.getCodecInfo(), event.getRadioInfo()));
-			
 			// Add Observers
 			List<Observer<RadioPlayerEntity>> playerEntityObservers = Arrays.asList(printer, new CoverArtObserver(rootLayout), new RadioInfoObserver(rootLayout));
 			List<Observer<CodecInformation>> codecObservers = Arrays.asList(new CodecObeserver(rootLayout));
-			controller.addObservers(playerEntityObservers, codecObservers);
+			List<Observer<ErrorInformation>> errorObservers = Arrays.asList(new ErrorObserver(rootLayout));
+			controller.addObservers(playerEntityObservers, codecObservers, errorObservers);
+			
+			// Add Event Handlers
+			rootLayout.addEventHandler(UpdateCoverEvent.UPDATE_IMAGE, event -> controller.updateCoverArt(event.getImageUrl()));
+			rootLayout.addEventHandler(UpdateLabelsEvent.UPDATE_LABELS, event -> controller.updateLabels(event.getCodecInfo(), event.getRadioInfo()));
+			rootLayout.addEventHandler(ReportErrorEvent.REPORT_ERROR, event -> controller.reportError(event.getErrorInformation()));
 
 			Scene scene = new Scene(rootLayout);
 			scene.setFill(Color.TRANSPARENT);

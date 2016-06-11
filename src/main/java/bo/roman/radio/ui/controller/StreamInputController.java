@@ -5,8 +5,6 @@ import java.net.URL;
 
 import bo.roman.radio.ui.business.RadioStreamManager;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
@@ -28,6 +26,8 @@ public class StreamInputController {
 		if(isInputValid()) {
 			RadioStreamManager.setLastStream(textArea.getText());
 			dialogStage.close();
+		} else {
+			textArea.setText(String.format("Invalid URI[%s]. Plase set a valid URI", textArea.getText()));
 		}
 	}
 
@@ -35,12 +35,6 @@ public class StreamInputController {
 		try {
 			return new URL(textArea.getText()) != null;
 		} catch (MalformedURLException e) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.initOwner(dialogStage);
-			alert.setTitle("Invalid URI");
-			alert.setHeaderText("Please correct invalid field");
-			alert.setContentText(e.getMessage());
-			alert.showAndWait();
 			return false;
 		}
 	}
