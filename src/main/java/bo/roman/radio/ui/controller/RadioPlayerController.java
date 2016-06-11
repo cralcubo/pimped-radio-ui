@@ -10,20 +10,17 @@ import bo.roman.radio.player.model.CodecInformation;
 import bo.roman.radio.player.model.ErrorInformation;
 import bo.roman.radio.player.model.RadioPlayerEntity;
 import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleButton;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 
 public class RadioPlayerController implements Initializable {
 
 	private static final int MAX_VOL = 100;
 
-	private ToggleButton play;
 	private Slider volume;
 
 	private IRadioPlayer radioPlayer;
 
-	public RadioPlayerController(ToggleButton play, Slider volume) {
-		this.play = play;
+	public RadioPlayerController(Slider volume) {
 		this.volume = volume;
 		radioPlayer = new RadioPlayer();
 	}
@@ -43,12 +40,8 @@ public class RadioPlayerController implements Initializable {
 		radioPlayer.setVolume((int) volume.getValue());
 	}
 
-	public void playAction(String station) {
-		if (play.isSelected()) {
-			radioPlayer.play(station);
-		} else {
-			radioPlayer.stop();
-		}
+	public void play(String station) {
+		radioPlayer.play(station);
 	}
 
 	public void close() {
@@ -57,6 +50,5 @@ public class RadioPlayerController implements Initializable {
 	
 	public void stop() {
 		radioPlayer.stop();
-		play.setSelected(true);
 	}
 }

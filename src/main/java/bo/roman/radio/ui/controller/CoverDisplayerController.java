@@ -63,7 +63,7 @@ public class CoverDisplayerController {
 	private void initialize() {
 		coverArtController = new CoverArtController(coverViewer, coverShader);
 		labelsController = new LabelsController(mainLabel, subLabel, extraLabel, codecLabel);
-		radioPlayerController = new RadioPlayerController(play, volume);
+		radioPlayerController = new RadioPlayerController(volume);
 		
 		List<Initializable> controllers = Arrays.asList(coverArtController, labelsController, radioPlayerController);
 		controllers.forEach(Initializable::initialize);
@@ -90,8 +90,13 @@ public class CoverDisplayerController {
 	
 	@FXML
 	private void playButtonAction() {
-		String station = RadioStreamManager.getLastStream();
-		radioPlayerController.playAction(station);
+		if (play.isSelected()) {
+			radioPlayerController.play(RadioStreamManager.getLastStream());
+		} else {
+			radioPlayerController.stop();
+			coverArtController.initialize();
+			labelsController.initialize();
+		}
 	}
 	
 	@FXML
