@@ -1,0 +1,21 @@
+.toggle-button {
+  -fx-graphic: url('./icons/play.png');
+  -fx-background-color: none;
+  -fx-border-color: none;
+}
+
+.toggle-button:selected {
+  -fx-graphic: url('./icons/stop.png');
+}
+
+#close {
+  -fx-graphic: url('./icons/close.png');
+  -fx-background-color: none;
+  -fx-border-color: none;
+}
+
+#load {
+  -fx-graphic: url('./icons/load.png');
+  -fx-background-color: none;
+  -fx-border-color: none;
+}
