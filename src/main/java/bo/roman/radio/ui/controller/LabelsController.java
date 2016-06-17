@@ -76,8 +76,6 @@ public class LabelsController implements Initializable {
 			return "mp3";
 		case "mp4a":
 			return "aac";
-		case "vorb":
-			return "vorbis";
 		default:
 			return codec;
 		}

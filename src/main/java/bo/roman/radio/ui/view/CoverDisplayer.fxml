@@ -35,10 +35,10 @@
             <GridPane>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="244.0" minWidth="10.0" prefWidth="225.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="126.0" minWidth="10.0" prefWidth="30.0" />
+                <ColumnConstraints hgrow="SOMETIMES" prefWidth="16.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <Label id="codecLabel" fx:id="codecLabel" prefHeight="17.0" prefWidth="233.0" text="ACC | 320 kbps | 44.1 kHz | Stereo" textAlignment="CENTER" textFill="#a1a1a1">
@@ -46,7 +46,7 @@
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Label>
-                  <Button id="close" fx:id="close" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#closeAction" prefHeight="27.0" prefWidth="42.0" text="x" GridPane.columnIndex="1">
+                  <Button id="close" fx:id="close" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#closeAction" prefHeight="16.0" prefWidth="16.0" text="x" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin></Button>
@@ -73,7 +73,7 @@
                   <Insets left="10.0" top="140.0" />
                </GridPane.margin>
             </Pane>
-            <GridPane GridPane.rowIndex="2">
+            <GridPane prefHeight="2.0" prefWidth="270.0" GridPane.rowIndex="2">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="110.0" minWidth="10.0" prefWidth="110.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="103.0" minWidth="10.0" prefWidth="50.0" />
