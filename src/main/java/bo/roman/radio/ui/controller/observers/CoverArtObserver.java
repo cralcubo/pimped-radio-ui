@@ -34,7 +34,7 @@ public class CoverArtObserver implements Observer<RadioPlayerEntity> {
 		
 		LoggerUtils.logDebug(logger, () -> String.format("Updating CoverArt with Entities { Album[%s] , Radio[%s] }", ca, cr));
 		
-		Optional<URI> oUri = Optional.ofNullable(ca.orElse(cr.orElse(null))); 
+		Optional<URI> oUri = Optional.ofNullable(ca.orElseGet(() -> cr.orElse(null))); 
 		Optional<String> oUrl = oUri.map(uri -> uri.toString());
 		
 		logger.info("Updating CoverArt with {}", oUrl);

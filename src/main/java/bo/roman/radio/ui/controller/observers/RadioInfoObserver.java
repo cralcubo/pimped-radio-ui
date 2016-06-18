@@ -34,7 +34,7 @@ public class RadioInfoObserver implements Observer<RadioPlayerEntity> {
 		Optional<Song> song = rpe.getSong();
 		Optional<Radio> radio = rpe.getRadio();
 		
-		RadioInformation ri = album.map(this::toRadioInfo).orElse(toRadioInfo(radio, song));
+		RadioInformation ri = album.map(this::toRadioInfo).orElseGet(() -> toRadioInfo(radio, song));
 		logger.info("Updating RadioInfo with {}", ri);
 		event.setRadioInfo(Optional.of(ri));
 		node.fireEvent(event);
