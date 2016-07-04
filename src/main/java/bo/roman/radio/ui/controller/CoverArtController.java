@@ -12,9 +12,9 @@ import javafx.scene.shape.Rectangle;
 
 public class CoverArtController implements Initializable {
 	private static final String LOGO_URI = "src/main/resources/logo/pimped-radio-glossy.jpeg";
-	private static final int BLUR_RATIO = 10;
+	private static final int BLUR_RATIO = 30;
 	
-	private static final double MAXOPACITY_SHADER = 0.7;
+	private static final double MAXOPACITY_SHADER = 0.5;
 	private static final double MINOPACITY_SHADER = 0.0;
 	
 	private final ImageView coverViewer;

@@ -41,7 +41,7 @@
                 <RowConstraints vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label id="codecLabel" fx:id="codecLabel" prefHeight="17.0" prefWidth="233.0" text="ACC | 320 kbps | 44.1 kHz | Stereo" textAlignment="CENTER" textFill="#a1a1a1">
+                  <Label id="codecLabel" fx:id="codecLabel" prefHeight="17.0" prefWidth="233.0" text="ACC | 320 kbps | 44.1 kHz | Stereo" textAlignment="CENTER" textFill="#e0e0eb">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin>
@@ -54,8 +54,8 @@
             </GridPane>
             <Pane prefHeight="70.0" prefWidth="258.0" GridPane.rowIndex="1">
                <children>
-                  <Label id="subLabel" fx:id="subLabel" prefHeight="17.0" prefWidth="260.0" text="Artist" textFill="#a1a1a1" />
-                  <Label id="mainLabel" fx:id="mainLabel" prefHeight="43.0" prefWidth="260.0" text="Song" textFill="#a1a1a1">
+                  <Label id="subLabel" fx:id="subLabel" prefHeight="17.0" prefWidth="260.0" text="Artist" textFill="#e0e0eb" />
+                  <Label id="mainLabel" fx:id="mainLabel" prefHeight="43.0" prefWidth="260.0" text="Song" textFill="#e1e1eb">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -63,7 +63,7 @@
                         <Insets top="20.0" />
                      </padding>
                   </Label>
-                  <Label id="extraLabel" fx:id="extraLabel" prefHeight="70.0" prefWidth="260.0" text="Album" textFill="#a1a1a1">
+                  <Label id="extraLabel" fx:id="extraLabel" prefHeight="70.0" prefWidth="260.0" text="Album" textFill="#e0e0eb">
                      <padding>
                         <Insets top="40.0" />
                      </padding>
