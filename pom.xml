@@ -28,13 +28,21 @@
 		<junit.version>4.12</junit.version>
 		<hamcrest.version>1.3</hamcrest.version>
 		<xerces.version>2.11.0</xerces.version>
+		<radio.player.version>1.0.0</radio.player.version>
+		<radio.tuner.version>0.0.1-SNAPSHOT</radio.tuner.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>bo.roman</groupId>
 			<artifactId>pimped-radio</artifactId>
-			<version>1.0.0</version>
+			<version>${radio.player.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>bo.radio</groupId>
+			<artifactId>pimped-radio-tuner</artifactId>
+			<version>${radio.tuner.version}</version>
 		</dependency>
 
 		<dependency>

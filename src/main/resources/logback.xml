@@ -12,11 +12,15 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 	
-	<logger name="bo.roman.radio.cover.album.AmazonAlbumFinder" level="debug" additivity="false">
+	<logger name="bo.roman.radio.cover.CoverArtManager" level="debug" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
 	
 	<!-- <logger name="bo.roman.radio.cover.album" level="debug" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	
+	<logger name="bo.roman.radio.cover.album.AmazonAlbumFinder" level="debug" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
 	

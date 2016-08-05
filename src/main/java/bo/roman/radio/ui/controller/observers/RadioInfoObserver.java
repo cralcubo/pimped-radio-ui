@@ -11,7 +11,7 @@ import bo.roman.radio.cover.model.Song;
 import bo.roman.radio.player.listener.Observer;
 import bo.roman.radio.player.model.RadioPlayerEntity;
 import bo.roman.radio.ui.controller.events.UpdateLabelsEvent;
-import bo.roman.radio.ui.model.RadioInformation;
+import bo.roman.radio.ui.model.RadioPlayerInformation;
 import bo.roman.radio.utilities.LoggerUtils;
 import javafx.scene.Node;
 
@@ -34,24 +34,24 @@ public class RadioInfoObserver implements Observer<RadioPlayerEntity> {
 		Optional<Song> song = rpe.getSong();
 		Optional<Radio> radio = rpe.getRadio();
 		
-		RadioInformation ri = album.map(this::toRadioInfo).orElseGet(() -> toRadioInfo(radio, song));
+		RadioPlayerInformation ri = album.map(this::toRadioInfo).orElseGet(() -> toRadioInfo(radio, song));
 		logger.info("Updating RadioInfo with {}", ri);
 		event.setRadioInfo(Optional.of(ri));
 		node.fireEvent(event);
 	}
 	
-	private RadioInformation toRadioInfo(Album album) {
-		return new RadioInformation(album.getSongName(), album.getArtistName(), album.getAlbumName());
+	private RadioPlayerInformation toRadioInfo(Album album) {
+		return new RadioPlayerInformation(album.getSongName(), album.getArtistName(), album.getAlbumName());
 	}
 	
-	private RadioInformation toRadioInfo(Optional<Radio> radio, Optional<Song> song) {
+	private RadioPlayerInformation toRadioInfo(Optional<Radio> radio, Optional<Song> song) {
 		String radioName = radio.map(Radio::getName).orElse("");
 		if(song.isPresent()) {
 			Song infoSong = song.get();
-			return new RadioInformation(infoSong.getName(), infoSong.getArtist(), radioName);
+			return new RadioPlayerInformation(infoSong.getName(), infoSong.getArtist(), radioName);
 		}
 		
-		return new RadioInformation(radioName);
+		return new RadioPlayerInformation(radioName);
 	}
 
 }

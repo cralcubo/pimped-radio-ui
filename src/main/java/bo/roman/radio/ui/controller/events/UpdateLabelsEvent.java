@@ -3,7 +3,7 @@ package bo.roman.radio.ui.controller.events;
 import java.util.Optional;
 
 import bo.roman.radio.player.model.CodecInformation;
-import bo.roman.radio.ui.model.RadioInformation;
+import bo.roman.radio.ui.model.RadioPlayerInformation;
 import javafx.event.Event;
 import javafx.event.EventType;
 
@@ -13,7 +13,7 @@ public class UpdateLabelsEvent extends Event {
 	public static final EventType<UpdateLabelsEvent> UPDATE_LABELS = new EventType<>("UPDATE_LABELS");
 	
 	private Optional<CodecInformation> codecInfo;
-	private Optional<RadioInformation> radioInfo;
+	private Optional<RadioPlayerInformation> radioInfo;
 
 	public UpdateLabelsEvent(EventType<? extends Event> eventType) {
 		super(eventType);
@@ -29,11 +29,11 @@ public class UpdateLabelsEvent extends Event {
 		this.codecInfo = codecInfo;
 	}
 
-	public Optional<RadioInformation> getRadioInfo() {
+	public Optional<RadioPlayerInformation> getRadioInfo() {
 		return radioInfo;
 	}
 
-	public void setRadioInfo(Optional<RadioInformation> radioInfo) {
+	public void setRadioInfo(Optional<RadioPlayerInformation> radioInfo) {
 		this.radioInfo = radioInfo;
 	}
 

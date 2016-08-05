@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+
 import bo.roman.radio.player.listener.Observer;
 import bo.roman.radio.player.model.CodecInformation;
 import bo.roman.radio.player.model.ErrorInformation;
 import bo.roman.radio.player.model.RadioPlayerEntity;
-import bo.roman.radio.ui.controller.CoverDisplayerController;
+import bo.roman.radio.ui.controller.RadioDisplayerController;
 import bo.roman.radio.ui.controller.StreamInputController;
 import bo.roman.radio.ui.controller.events.ReportErrorEvent;
 import bo.roman.radio.ui.controller.events.UpdateCoverEvent;
@@ -31,6 +33,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class App extends Application {
+	private static final String LOGO_URI = "src/main/resources/logo/pimped-radio-glossy.jpeg";
 
 	private Stage primaryStage;
 	private StackPane rootLayout;
@@ -42,21 +45,23 @@ public class App extends Application {
 		launch(args);
 	}
 
+	@SuppressWarnings("restriction")
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.initStyle(StageStyle.TRANSPARENT);
 		primaryStage.setResizable(false);
 		primaryStage.setAlwaysOnTop(true);
+		com.apple.eawt.Application.getApplication().setDockIconImage(new ImageIcon(LOGO_URI).getImage());
 		this.primaryStage = primaryStage;
 		initRootLayout();
 	}
 
 	private void initRootLayout() {
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(App.class.getResource("view/CoverDisplayer.fxml"));
+		loader.setLocation(App.class.getResource("view/RadioDisplayer.fxml"));
 		try {
 			rootLayout = loader.load();
-			CoverDisplayerController controller = loader.getController();
+			RadioDisplayerController controller = loader.getController();
 			controller.setMainApp(this);
 			
 			// Clip the root pane

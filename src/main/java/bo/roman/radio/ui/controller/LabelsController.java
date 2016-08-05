@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import bo.roman.radio.player.model.CodecInformation;
 import bo.roman.radio.player.model.ErrorInformation;
-import bo.roman.radio.ui.model.RadioInformation;
+import bo.roman.radio.ui.model.RadioPlayerInformation;
 import bo.roman.radio.utilities.StringUtils;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
@@ -32,7 +32,7 @@ public class LabelsController implements Initializable {
 		codecLabel.setText("");
 	}
 
-	public void updateLabels(Optional<CodecInformation> codecInfo, Optional<RadioInformation> radioInfo) {
+	public void updateLabels(Optional<CodecInformation> codecInfo, Optional<RadioPlayerInformation> radioInfo) {
 		codecInfo.ifPresent(this::updateCodecLabel);
 		radioInfo.ifPresent(this::updateRadioInfoLabels);
 	}
@@ -51,11 +51,11 @@ public class LabelsController implements Initializable {
 		});
 	}
 
-	private void updateRadioInfoLabels(RadioInformation ri) {
+	private void updateRadioInfoLabels(RadioPlayerInformation ri) {
 		Platform.runLater(() -> {
-			mainLabel.setText(StringUtils.removeBrackets(ri.getMainInfo()));
-			subLabel.setText(StringUtils.removeBrackets(ri.getSubInfo()));
-			extraLabel.setText(StringUtils.removeBrackets(ri.getExtraInfo()));
+			mainLabel.setText(StringUtils.removeBracketsInfo(ri.getMainInfo()));
+			subLabel.setText(StringUtils.removeBracketsInfo(ri.getSubInfo()));
+			extraLabel.setText(StringUtils.removeBracketsInfo(ri.getExtraInfo()));
 		});
 	}
 	

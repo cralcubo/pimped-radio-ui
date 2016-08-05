@@ -11,7 +11,8 @@ import bo.roman.radio.player.model.RadioPlayerEntity;
 import bo.roman.radio.ui.App;
 import bo.roman.radio.ui.business.RadioStreamManager;
 import bo.roman.radio.ui.controller.util.NodeFader;
-import bo.roman.radio.ui.model.RadioInformation;
+import bo.roman.radio.ui.model.RadioPlayerInformation;
+import bo.roman.radio.ui.model.StationInformation;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,11 +22,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
-public class CoverDisplayerController {
+public class RadioDisplayerController {
 	
 	private CoverArtController coverArtController;
 	private RadioPlayerController radioPlayerController;
 	private LabelsController labelsController;
+	private RadioTunerController tunerController;
 	
 	private static final double MAXOPACITY_INFO = 1.0;
 	private static final double MINOPACITY_INFO = 0.0;
@@ -46,9 +48,12 @@ public class CoverDisplayerController {
 	@FXML
 	private Button load;
 	@FXML
+	private Button addStation;
+	@FXML
 	private ToggleButton play;
 	@FXML
 	private Slider volume;
+	
 	
 	@FXML
 	private Label mainLabel;
@@ -64,6 +69,7 @@ public class CoverDisplayerController {
 		coverArtController = new CoverArtController(coverViewer, coverShader);
 		labelsController = new LabelsController(mainLabel, subLabel, extraLabel, codecLabel);
 		radioPlayerController = new RadioPlayerController(volume);
+		tunerController = new RadioTunerController(addStation);
 		
 		List<Initializable> controllers = Arrays.asList(coverArtController, labelsController, radioPlayerController);
 		controllers.forEach(Initializable::initialize);
@@ -112,6 +118,11 @@ public class CoverDisplayerController {
 		System.exit(1);
 	}
 	
+	@FXML
+	private void addAction() {
+		tunerController.addStation(getCurrentStation());
+	}
+
 	public Rectangle getCoverShader() {
 		return coverShader;
 	}
@@ -124,7 +135,7 @@ public class CoverDisplayerController {
 		coverArtController.setImage(uri);
 	}
 
-	public void updateLabels(Optional<CodecInformation> codecInfo, Optional<RadioInformation> radioInfo) {
+	public void updateLabels(Optional<CodecInformation> codecInfo, Optional<RadioPlayerInformation> radioInfo) {
 		labelsController.updateLabels(codecInfo, radioInfo);
 	}
 	
@@ -135,6 +146,11 @@ public class CoverDisplayerController {
 	
 	public void setMainApp(App mainApp) {
 		this.mainApp = mainApp;
+	}
+	
+	private StationInformation getCurrentStation() {
+		
+		return null;
 	}
 	
 }

@@ -19,3 +19,9 @@
   -fx-background-color: none;
   -fx-border-color: none;
 }
+
+#add {
+  -fx-graphic: url('./icons/add.png');
+  -fx-background-color: none;
+  -fx-border-color: none;
+}
