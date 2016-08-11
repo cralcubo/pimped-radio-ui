@@ -16,6 +16,10 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 	
+	<logger name="bo.roman.radio.ui" level="debug" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	
 	<!-- <logger name="bo.roman.radio.cover.album" level="debug" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>

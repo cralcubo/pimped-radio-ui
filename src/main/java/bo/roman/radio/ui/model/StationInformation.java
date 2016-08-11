@@ -2,70 +2,55 @@ package bo.roman.radio.ui.model;
 
 public class StationInformation {
 	private String name;
-	private String url;
+	private String streamUrl;
 	private String codec;
 	private float sampleRate;
 	private float bitRate;
-
-	private StationInformation(Builder b) {
-		name = b.name;
-		url = b.url;
-		codec = b.codec;
-		sampleRate = b.sampleRate;
-		bitRate = b.bitRate;
+	
+	public StationInformation() {
+		this("", "");
 	}
-
+	
+	public StationInformation(String name, String streamUrl) {
+		this.name = name;
+		this.streamUrl = streamUrl;
+	}
+	
 	public String getName() {
 		return name;
 	}
-
-	public String getUrl() {
-		return url;
+	public void setName(String name) {
+		this.name = name;
 	}
-
+	public String getStreamUrl() {
+		return streamUrl;
+	}
+	public void setStreamUrl(String streamUrl) {
+		this.streamUrl = streamUrl;
+	}
 	public String getCodec() {
 		return codec;
 	}
-
+	public void setCodec(String codec) {
+		this.codec = codec;
+	}
 	public float getSampleRate() {
 		return sampleRate;
 	}
-
+	public void setSampleRate(float sampleRate) {
+		this.sampleRate = sampleRate;
+	}
 	public float getBitRate() {
 		return bitRate;
 	}
+	public void setBitRate(float bitRate) {
+		this.bitRate = bitRate;
+	}
 
-	public class Builder {
-		private String name;
-		private String url;
-		private String codec;
-		private float sampleRate;
-		private float bitRate;
-
-		public Builder(String name, String url) {
-			this.name = name;
-			this.url = url;
-		}
-
-		public Builder codec(String val) {
-			codec = val;
-			return this;
-		}
-
-		public Builder sampleRate(float val) {
-			sampleRate = val;
-			return this;
-		}
-
-		public Builder bitRate(float val) {
-			bitRate = val;
-			return this;
-		}
-
-		public StationInformation build() {
-			return new StationInformation(this);
-		}
-
+	@Override
+	public String toString() {
+		return "StationInformation [name=" + name + ", streamUrl=" + streamUrl + ", codec=" + codec + ", sampleRate="
+				+ sampleRate + ", bitRate=" + bitRate + "]";
 	}
 
 }

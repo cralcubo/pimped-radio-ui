@@ -10,8 +10,7 @@ import bo.roman.radio.player.listener.Observer;
 import bo.roman.radio.player.model.CodecInformation;
 import bo.roman.radio.player.model.ErrorInformation;
 import bo.roman.radio.player.model.RadioPlayerEntity;
-import bo.roman.radio.ui.controller.RadioDisplayerController;
-import bo.roman.radio.ui.controller.StreamInputController;
+import bo.roman.radio.ui.controller.displayer.RadioDisplayerController;
 import bo.roman.radio.ui.controller.events.ReportErrorEvent;
 import bo.roman.radio.ui.controller.events.UpdateCoverEvent;
 import bo.roman.radio.ui.controller.events.UpdateLabelsEvent;
@@ -19,10 +18,16 @@ import bo.roman.radio.ui.controller.observers.CodecObeserver;
 import bo.roman.radio.ui.controller.observers.CoverArtObserver;
 import bo.roman.radio.ui.controller.observers.ErrorObserver;
 import bo.roman.radio.ui.controller.observers.RadioInfoObserver;
+import bo.roman.radio.ui.controller.observers.RadioStationInfoManagerObserver;
+import bo.roman.radio.ui.controller.tuner.StreamInputController;
+import bo.roman.radio.ui.model.AlertMessage;
+import bo.roman.radio.ui.model.StationInformation;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -82,8 +87,9 @@ public class App extends Application {
 			};
 			
 			// Add Observers
-			List<Observer<RadioPlayerEntity>> playerEntityObservers = Arrays.asList(printer, new CoverArtObserver(rootLayout), new RadioInfoObserver(rootLayout));
-			List<Observer<CodecInformation>> codecObservers = Arrays.asList(new CodecObeserver(rootLayout));
+			RadioStationInfoManagerObserver stationInfoObserver = new RadioStationInfoManagerObserver(new StationInformation());
+			List<Observer<RadioPlayerEntity>> playerEntityObservers = Arrays.asList(printer, new CoverArtObserver(rootLayout), new RadioInfoObserver(rootLayout), stationInfoObserver.createRadioInfoObserver());
+			List<Observer<CodecInformation>> codecObservers = Arrays.asList(new CodecObeserver(rootLayout), stationInfoObserver.createCodecInfoObserver());
 			List<Observer<ErrorInformation>> errorObservers = Arrays.asList(new ErrorObserver(rootLayout));
 			controller.addObservers(playerEntityObservers, codecObservers, errorObservers);
 			
@@ -148,5 +154,16 @@ public class App extends Application {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void triggerAlert(AlertType alertType, AlertMessage alertMessage) {
+		Alert alert = new Alert(alertType);
+		alert.initOwner(primaryStage);
+		alert.setTitle(alertMessage.getTitle());
+		alert.setHeaderText(alertMessage.getHeader());
+		alert.setContentText(alertMessage.getMessage());
+		
+		alert.showAndWait();
+		
 	}
 }

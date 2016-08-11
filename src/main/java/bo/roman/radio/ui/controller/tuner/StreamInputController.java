@@ -1,9 +1,10 @@
-package bo.roman.radio.ui.controller;
+package bo.roman.radio.ui.controller.tuner;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import bo.roman.radio.ui.business.RadioStreamManager;
+import bo.roman.radio.ui.business.RadioStationInfoManager;
+import bo.roman.radio.ui.model.StationInformation;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -24,7 +25,7 @@ public class StreamInputController {
 	@FXML
 	private void handleOk() {
 		if(isInputValid()) {
-			RadioStreamManager.setLastStream(textArea.getText());
+			RadioStationInfoManager.setCurrentStationPlaying(new StationInformation("NO_NAME", textArea.getText()));
 			dialogStage.close();
 		} else {
 			textArea.setText(String.format("Invalid URI[%s]. Plase set a valid URI", textArea.getText()));

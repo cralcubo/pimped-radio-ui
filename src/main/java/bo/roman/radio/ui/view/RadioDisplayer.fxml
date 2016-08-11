@@ -15,7 +15,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane onMouseEntered="#onMouseEntered" onMouseExited="#onMouseExited" prefHeight="270.0" prefWidth="270.0" stylesheets="@../../../../../cover-displayer.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bo.roman.radio.ui.controller.RadioDisplayerController">
+<StackPane onMouseEntered="#onMouseEntered" onMouseExited="#onMouseExited" prefHeight="270.0" prefWidth="270.0" stylesheets="@../../../../../cover-displayer.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bo.roman.radio.ui.controller.displayer.RadioDisplayerController">
    <children>
       <ImageView fx:id="coverViewer" fitHeight="270.0" fitWidth="270.0" pickOnBounds="true" preserveRatio="true">
          <effect>
@@ -83,7 +83,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button id="add" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Add">
+                  <Button id="add" fx:id="addStation" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#addAction" text="Add">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin>

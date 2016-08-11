@@ -1,4 +1,4 @@
-package bo.roman.radio.ui.controller;
+package bo.roman.radio.ui.controller.displayer;
 
 public interface Initializable {
 	

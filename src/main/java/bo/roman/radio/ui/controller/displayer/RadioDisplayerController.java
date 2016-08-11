@@ -1,28 +1,37 @@
-package bo.roman.radio.ui.controller;
+package bo.roman.radio.ui.controller.displayer;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import bo.radio.tuner.exceptions.TunerPersistenceException;
 import bo.roman.radio.player.listener.Observer;
 import bo.roman.radio.player.model.CodecInformation;
 import bo.roman.radio.player.model.ErrorInformation;
 import bo.roman.radio.player.model.RadioPlayerEntity;
 import bo.roman.radio.ui.App;
-import bo.roman.radio.ui.business.RadioStreamManager;
+import bo.roman.radio.ui.business.RadioStationInfoManager;
+import bo.roman.radio.ui.controller.tuner.RadioTunerController;
 import bo.roman.radio.ui.controller.util.NodeFader;
+import bo.roman.radio.ui.model.AlertMessage;
 import bo.roman.radio.ui.model.RadioPlayerInformation;
 import bo.roman.radio.ui.model.StationInformation;
+import bo.roman.radio.utilities.LoggerUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
 public class RadioDisplayerController {
+	private final static Logger logger = LoggerFactory.getLogger(RadioDisplayerController.class);
 	
 	private CoverArtController coverArtController;
 	private RadioPlayerController radioPlayerController;
@@ -71,7 +80,7 @@ public class RadioDisplayerController {
 		radioPlayerController = new RadioPlayerController(volume);
 		tunerController = new RadioTunerController(addStation);
 		
-		List<Initializable> controllers = Arrays.asList(coverArtController, labelsController, radioPlayerController);
+		List<Initializable> controllers = Arrays.asList(coverArtController, labelsController, radioPlayerController, tunerController);
 		controllers.forEach(Initializable::initialize);
 	}
 	
@@ -97,7 +106,19 @@ public class RadioDisplayerController {
 	@FXML
 	private void playButtonAction() {
 		if (play.isSelected()) {
-			radioPlayerController.play(RadioStreamManager.getLastStream());
+			Optional<StationInformation> currentStation = RadioStationInfoManager.getCurrentStationPlaying();
+			Optional<StationInformation> lastStationPlayed = RadioStationInfoManager.getLastStationPlaying();
+			if(!currentStation.isPresent() && !lastStationPlayed.isPresent()) {
+				logger.warn("There are no Radio Stations to be played.");
+				mainApp.triggerAlert(AlertType.INFORMATION, new AlertMessage.Builder()
+																			.title("Play Radio Station")
+																			.header("There were no Radio Stations played yet.")
+																			.message("Load a Radio Station to play something.")
+																			.build());
+			}
+			
+			final StationInformation si = currentStation.orElseGet(() -> lastStationPlayed.get());
+			radioPlayerController.play(si.getStreamUrl());
 		} else {
 			radioPlayerController.stop();
 			coverArtController.initialize();
@@ -120,7 +141,28 @@ public class RadioDisplayerController {
 	
 	@FXML
 	private void addAction() {
-		tunerController.addStation(getCurrentStation());
+		LoggerUtils.logDebug(logger, () -> "Adding a new Radio Station");
+		Optional<StationInformation> currentStation = RadioStationInfoManager.getCompleteCurrentStationPlaying();
+		if(currentStation.isPresent()) {
+			try {
+				tunerController.addStation(currentStation.get());
+			} catch (TunerPersistenceException e) {
+				logger.error("Station could not be saved.", e);
+				mainApp.triggerAlert(AlertType.ERROR, new AlertMessage.Builder()
+																			.title("Add Radio Station")
+																			.header("Error saving a Radio Station.")
+																			.message(e.getMessage())
+																			.build());
+			}
+		}else {
+			logger.error("A Radio Station was tried to be added but the operation failed.");
+			mainApp.triggerAlert(AlertType.INFORMATION, new AlertMessage.Builder()
+																		.title("Add Radio Station")
+																		.header("Not enough information to save a Radio Station")
+																		.message("A Radio Station was tried to be added but the operation failed.")
+																		.build());
+		}
+		
 	}
 
 	public Rectangle getCoverShader() {
@@ -146,11 +188,6 @@ public class RadioDisplayerController {
 	
 	public void setMainApp(App mainApp) {
 		this.mainApp = mainApp;
-	}
-	
-	private StationInformation getCurrentStation() {
-		
-		return null;
 	}
 	
 }
