@@ -1,15 +1,16 @@
-package bo.roman.radio.ui.controller.displayer;
+package bo.roman.radio.ui.business.displayer;
 
 import java.util.Optional;
 
 import bo.roman.radio.player.model.CodecInformation;
 import bo.roman.radio.player.model.ErrorInformation;
+import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.ui.model.RadioPlayerInformation;
 import bo.roman.radio.utilities.StringUtils;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 
-public class LabelsController implements Initializable {
+public class LabelsManager implements Initializable {
 	private static final String STOP_MSG = "Stoping RadioPlayer.";
 	
 	private Label mainLabel;
@@ -17,7 +18,7 @@ public class LabelsController implements Initializable {
 	private Label extraLabel;
 	private Label codecLabel;
 
-	public LabelsController(Label mainLabel, Label subLabel, Label extraLabel, Label codecLabel) {
+	public LabelsManager(Label mainLabel, Label subLabel, Label extraLabel, Label codecLabel) {
 		this.mainLabel = mainLabel;
 		this.subLabel = subLabel;
 		this.extraLabel = extraLabel;

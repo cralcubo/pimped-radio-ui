@@ -1,11 +1,11 @@
-package bo.roman.radio.ui.controller.observers;
+package bo.roman.radio.ui.business.observers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import bo.roman.radio.player.listener.Observer;
 import bo.roman.radio.player.model.ErrorInformation;
-import bo.roman.radio.ui.controller.events.ReportErrorEvent;
+import bo.roman.radio.ui.business.events.ReportErrorEvent;
 import javafx.scene.Node;
 
 public class ErrorObserver implements Observer<ErrorInformation> {

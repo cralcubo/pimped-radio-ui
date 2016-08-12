@@ -1,8 +1,9 @@
-package bo.roman.radio.ui.controller.displayer;
+package bo.roman.radio.ui.business.displayer;
 
 import java.nio.file.Paths;
 import java.util.Optional;
 
+import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.ui.controller.util.NodeFader;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.effect.Reflection;
@@ -10,7 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 
-public class CoverArtController implements Initializable {
+public class CoverArtManager implements Initializable {
 	private static final String LOGO_URI = "src/main/resources/logo/pimped-radio-glossy.jpeg";
 	private static final int BLUR_RATIO = 30;
 	
@@ -23,7 +24,7 @@ public class CoverArtController implements Initializable {
 	private final String defaultLogoUri;
 	
 	
-	public CoverArtController(ImageView coverViewer, Rectangle coverShader) {
+	public CoverArtManager(ImageView coverViewer, Rectangle coverShader) {
 		this.coverViewer = coverViewer;
 		this.coverShader = coverShader;
 		reflection = new Reflection();

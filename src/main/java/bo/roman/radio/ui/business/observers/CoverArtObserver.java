@@ -1,4 +1,4 @@
-package bo.roman.radio.ui.controller.observers;
+package bo.roman.radio.ui.business.observers;
 
 import java.net.URI;
 import java.util.Optional;
@@ -11,7 +11,7 @@ import bo.roman.radio.cover.model.CoverArt;
 import bo.roman.radio.cover.model.Radio;
 import bo.roman.radio.player.listener.Observer;
 import bo.roman.radio.player.model.RadioPlayerEntity;
-import bo.roman.radio.ui.controller.events.UpdateCoverEvent;
+import bo.roman.radio.ui.business.events.UpdateCoverEvent;
 import bo.roman.radio.utilities.LoggerUtils;
 import javafx.scene.Node;
 

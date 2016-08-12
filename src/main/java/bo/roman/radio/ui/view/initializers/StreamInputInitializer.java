@@ -1,0 +1,66 @@
+package bo.roman.radio.ui.view.initializers;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Paths;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import bo.roman.radio.ui.Initializable;
+import bo.roman.radio.ui.controller.StreamInputController;
+import bo.roman.radio.utilities.LoggerUtils;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+
+public class StreamInputInitializer implements Initializable {
+	private final Logger log = LoggerFactory.getLogger(StreamInputInitializer.class);
+	
+	private static final String FXML_PATH = "src/main/resources/fxml/StreamInput.fxml";
+	
+	private final Stage rootStage;
+	
+	private static StreamInputInitializer instance;
+	
+	private HBox dialogBox;
+	private StreamInputController controller;
+
+	private StreamInputInitializer(Stage rootStage) {
+		this.rootStage = rootStage;
+	}
+
+	public static StreamInputInitializer getInstance(Stage rootStage) {
+		if (instance == null) {
+			instance = new StreamInputInitializer(rootStage);
+		}
+		return instance;
+	}
+
+	@Override
+	public void initialize() {
+		LoggerUtils.logDebug(log, () -> "Initializing StreamInput View");
+		FXMLLoader loader = new FXMLLoader();
+		try {
+			loader.setLocation(Paths.get(FXML_PATH).toUri().toURL());
+			dialogBox = loader.load();
+			
+    		controller = loader.getController();
+    		controller.setDialogStage(rootStage);
+		} catch (MalformedURLException e) {
+			throw new RuntimeException("There was an error finding the FXML file.", e);
+		} catch (IOException e) {
+			throw new RuntimeException("There was an error loading the StreamInput view.", e);
+		}
+	}
+	
+	public HBox getDialogBox() {
+		return dialogBox;
+	}
+
+	public void clearFields() {
+		controller.clearFields();
+	}
+	
+
+}

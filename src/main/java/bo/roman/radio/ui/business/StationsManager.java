@@ -1,4 +1,4 @@
-package bo.roman.radio.ui.controller.tuner;
+package bo.roman.radio.ui.business;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,26 +17,27 @@ import bo.radio.tuner.business.TunerBusiness;
 import bo.radio.tuner.entities.Category;
 import bo.radio.tuner.entities.Station;
 import bo.radio.tuner.exceptions.TunerPersistenceException;
-import bo.roman.radio.ui.controller.displayer.Initializable;
 import bo.roman.radio.ui.model.StationInformation;
 import bo.roman.radio.utilities.LoggerUtils;
-import javafx.scene.control.Button;
 
-public class RadioTunerController implements Initializable {
-	private final static Logger logger = LoggerFactory.getLogger(RadioTunerController.class);
+public class StationsManager {
+	
+private final static Logger logger = LoggerFactory.getLogger(StationsManager.class);
 	
 	private static final String DBPROPS_PATH = "src/main/resources/database.properties";
 
 	private static final String DEAFAULTCATEGORY_NAME = "General";
 	
+	private static StationsManager instance;
+	
+	/*
+	 * DAO Controllers
+	 */
 	private final StationController stationController;
 	private final CategoryController categoryController;
 	private final TunerController tunerController;
-	
-	private final Button addStation;
 
-	public RadioTunerController(Button addStation) {
-		this.addStation = addStation;
+	private StationsManager() {
 		
 		Properties databaseProperties = new Properties();
 		try (FileInputStream fis = new FileInputStream(DBPROPS_PATH)) {
@@ -52,16 +53,19 @@ public class RadioTunerController implements Initializable {
 			throw new RuntimeException(String.format("There was an error reading the DB properties.", DBPROPS_PATH), e);
 		}
 	}
-
-	@Override
-	public void initialize() {
-		try {
-			LoggerUtils.logDebug(logger, () -> "Initializing Tuner Database.");
-			tunerController.init();
-		} catch (TunerPersistenceException e) {
-			logger.error("There was an error initializing the Radio Tuner Database. Tuner functionalities disabled.");
-			disableTuner();
+	
+	public static StationsManager getInstance() throws TunerPersistenceException {
+		if(instance == null) {
+			instance = new StationsManager();
+			instance.initializeDatabase();
 		}
+		
+		return instance;
+	}
+
+	private void initializeDatabase() throws TunerPersistenceException {
+		LoggerUtils.logDebug(logger, () -> "Initializing Tuner Database.");
+		tunerController.init();
 	}
 	
 	public void addStation(StationInformation rsi) throws TunerPersistenceException {
@@ -91,13 +95,5 @@ public class RadioTunerController implements Initializable {
 		logger.info("Station [{}] saved.", savedStation.getName());
 	}
 
-	/**
-	 * Due to errors connecting with the Database, all the functionality
-	 * of the tuner is disabled.
-	 */
-	private void disableTuner() {
-		//Disable addStation button.
-		addStation.setDisable(true);
-	}
 
 }

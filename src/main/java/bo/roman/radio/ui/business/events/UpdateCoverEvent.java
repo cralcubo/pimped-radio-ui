@@ -1,4 +1,4 @@
-package bo.roman.radio.ui.controller.events;
+package bo.roman.radio.ui.business.events;
 
 import java.util.Optional;
 

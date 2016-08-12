@@ -1,4 +1,4 @@
-package bo.roman.radio.ui.controller.displayer;
+package bo.roman.radio.ui.controller;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,30 +13,37 @@ import bo.roman.radio.player.model.CodecInformation;
 import bo.roman.radio.player.model.ErrorInformation;
 import bo.roman.radio.player.model.RadioPlayerEntity;
 import bo.roman.radio.ui.App;
+import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.ui.business.RadioStationInfoManager;
-import bo.roman.radio.ui.controller.tuner.RadioTunerController;
+import bo.roman.radio.ui.business.StationsManager;
+import bo.roman.radio.ui.business.displayer.ButtonsManager;
+import bo.roman.radio.ui.business.displayer.CoverArtManager;
+import bo.roman.radio.ui.business.displayer.LabelsManager;
+import bo.roman.radio.ui.business.displayer.RadioPlayerManager;
 import bo.roman.radio.ui.controller.util.NodeFader;
 import bo.roman.radio.ui.model.AlertMessage;
 import bo.roman.radio.ui.model.RadioPlayerInformation;
 import bo.roman.radio.ui.model.StationInformation;
 import bo.roman.radio.utilities.LoggerUtils;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
-public class RadioDisplayerController {
+public class RadioDisplayerController implements Initializable {
 	private final static Logger logger = LoggerFactory.getLogger(RadioDisplayerController.class);
 	
-	private CoverArtController coverArtController;
-	private RadioPlayerController radioPlayerController;
-	private LabelsController labelsController;
-	private RadioTunerController tunerController;
+	private CoverArtManager coverArtController;
+	private RadioPlayerManager radioPlayerController;
+	private LabelsManager labelsController;
+	private ButtonsManager buttonsManager;
+	
+	private StationsManager stationsManager;
 	
 	private static final double MAXOPACITY_INFO = 1.0;
 	private static final double MINOPACITY_INFO = 0.0;
@@ -74,13 +81,19 @@ public class RadioDisplayerController {
 	private Label codecLabel;
 	
 	@FXML
-	private void initialize() {
-		coverArtController = new CoverArtController(coverViewer, coverShader);
-		labelsController = new LabelsController(mainLabel, subLabel, extraLabel, codecLabel);
-		radioPlayerController = new RadioPlayerController(volume);
-		tunerController = new RadioTunerController(addStation);
-		
-		List<Initializable> controllers = Arrays.asList(coverArtController, labelsController, radioPlayerController, tunerController);
+	public void initialize() {
+		coverArtController = new CoverArtManager(coverViewer, coverShader);
+		labelsController = new LabelsManager(mainLabel, subLabel, extraLabel, codecLabel);
+		radioPlayerController = new RadioPlayerManager(volume);
+		try {
+			stationsManager = StationsManager.getInstance();
+			buttonsManager = new ButtonsManager(addStation, stationsManager);
+			buttonsManager.initialize();
+		} catch (TunerPersistenceException e1) {
+			addStation.setDisable(true);
+		}
+
+		List<Initializable> controllers = Arrays.asList(coverArtController, labelsController, radioPlayerController);
 		controllers.forEach(Initializable::initialize);
 	}
 	
@@ -145,7 +158,7 @@ public class RadioDisplayerController {
 		Optional<StationInformation> currentStation = RadioStationInfoManager.getCompleteCurrentStationPlaying();
 		if(currentStation.isPresent()) {
 			try {
-				tunerController.addStation(currentStation.get());
+				stationsManager.addStation(currentStation.get());
 			} catch (TunerPersistenceException e) {
 				logger.error("Station could not be saved.", e);
 				mainApp.triggerAlert(AlertType.ERROR, new AlertMessage.Builder()

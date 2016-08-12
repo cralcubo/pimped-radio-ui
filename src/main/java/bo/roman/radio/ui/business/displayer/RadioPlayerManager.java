@@ -1,4 +1,4 @@
-package bo.roman.radio.ui.controller.displayer;
+package bo.roman.radio.ui.business.displayer;
 
 import java.util.List;
 
@@ -9,10 +9,11 @@ import bo.roman.radio.player.listener.RadioPlayerEventListener;
 import bo.roman.radio.player.model.CodecInformation;
 import bo.roman.radio.player.model.ErrorInformation;
 import bo.roman.radio.player.model.RadioPlayerEntity;
+import bo.roman.radio.ui.Initializable;
 import javafx.scene.control.Slider;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 
-public class RadioPlayerController implements Initializable {
+public class RadioPlayerManager implements Initializable {
 
 	private static final int MAX_VOL = 100;
 
@@ -20,7 +21,7 @@ public class RadioPlayerController implements Initializable {
 
 	private IRadioPlayer radioPlayer;
 
-	public RadioPlayerController(Slider volume) {
+	public RadioPlayerManager(Slider volume) {
 		this.volume = volume;
 		radioPlayer = new RadioPlayer();
 	}

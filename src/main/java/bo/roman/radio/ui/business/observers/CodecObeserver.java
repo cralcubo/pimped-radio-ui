@@ -1,4 +1,4 @@
-package bo.roman.radio.ui.controller.observers;
+package bo.roman.radio.ui.business.observers;
 
 import java.util.Optional;
 
@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import bo.roman.radio.player.listener.Observer;
 import bo.roman.radio.player.model.CodecInformation;
-import bo.roman.radio.ui.controller.events.UpdateLabelsEvent;
+import bo.roman.radio.ui.business.events.UpdateLabelsEvent;
 import javafx.scene.Node;
 
 public class CodecObeserver implements Observer<CodecInformation> {

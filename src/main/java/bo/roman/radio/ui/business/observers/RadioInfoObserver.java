@@ -1,4 +1,4 @@
-package bo.roman.radio.ui.controller.observers;
+package bo.roman.radio.ui.business.observers;
 
 import java.util.Optional;
 
@@ -10,7 +10,7 @@ import bo.roman.radio.cover.model.Radio;
 import bo.roman.radio.cover.model.Song;
 import bo.roman.radio.player.listener.Observer;
 import bo.roman.radio.player.model.RadioPlayerEntity;
-import bo.roman.radio.ui.controller.events.UpdateLabelsEvent;
+import bo.roman.radio.ui.business.events.UpdateLabelsEvent;
 import bo.roman.radio.ui.model.RadioPlayerInformation;
 import bo.roman.radio.utilities.LoggerUtils;
 import javafx.scene.Node;

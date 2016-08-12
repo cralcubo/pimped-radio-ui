@@ -1,4 +1,4 @@
-package bo.roman.radio.ui.controller.events;
+package bo.roman.radio.ui.business.events;
 
 import bo.roman.radio.player.model.ErrorInformation;
 import javafx.event.Event;
