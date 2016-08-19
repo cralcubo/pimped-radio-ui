@@ -1,10 +1,10 @@
-.toggle-button {
+#play {
   -fx-graphic: url('./icons/play.png');
   -fx-background-color: none;
   -fx-border-color: none;
 }
 
-.toggle-button:selected {
+#play:selected {
   -fx-graphic: url('./icons/stop.png');
 }
 
@@ -20,8 +20,12 @@
   -fx-border-color: none;
 }
 
-#add {
+#addEditStation {
   -fx-graphic: url('./icons/add.png');
   -fx-background-color: none;
   -fx-border-color: none;
+}
+
+#addEditStation:selected {
+	-fx-graphic: url('./icons/edit.png');
 }

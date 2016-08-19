@@ -20,7 +20,7 @@ public class App extends Application {
 	private RadioPlayerInitializer radioPlayerInitializer;
 	private AlertInitializer alertInitializer;
 	private TunerLayoutInitializer tunerInitializer;
-
+	
 	public static void main(String[] args) {
 		launch(args);
 	}

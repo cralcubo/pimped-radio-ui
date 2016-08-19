@@ -83,12 +83,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button id="add" fx:id="addStation" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#addAction" text="Add">
-                     <GridPane.margin>
-                        <Insets left="10.0" />
-                     </GridPane.margin>
-                  </Button>
-                  <ToggleButton fx:id="play" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#playButtonAction" prefHeight="27.0" prefWidth="57.0" text="play" GridPane.columnIndex="1" />
+                  <ToggleButton id="play" fx:id="play" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#playButtonAction" prefHeight="27.0" prefWidth="57.0" text="play" GridPane.columnIndex="1" />
                   <Slider fx:id="volume" onMouseClicked="#volumeAction" onMouseDragged="#volumeAction" prefHeight="38.0" prefWidth="108.0" value="100.0" GridPane.columnIndex="2">
                      <GridPane.margin>
                         <Insets bottom="15.0" left="10.0" right="10.0" top="20.0" />
@@ -99,6 +94,11 @@
                         <Insets left="60.0" />
                      </GridPane.margin>
                   </Button>
+                  <ToggleButton id="addEditStation" fx:id="addEditStation" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#addEditAction" prefHeight="34.0" prefWidth="0.0" text="Add">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </ToggleButton>
                </children>
             </GridPane>
          </children>

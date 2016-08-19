@@ -24,7 +24,6 @@ import bo.roman.radio.ui.business.observers.ErrorObserver;
 import bo.roman.radio.ui.business.observers.RadioInfoObserver;
 import bo.roman.radio.ui.business.observers.RadioStationInfoManagerObserver;
 import bo.roman.radio.ui.controller.RadioDisplayerController;
-import bo.roman.radio.ui.model.StationInformation;
 import bo.roman.radio.utilities.LoggerUtils;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -107,13 +106,8 @@ public class RadioPlayerInitializer implements Initializable {
 		};
 
 		// Add Observers
-		RadioStationInfoManagerObserver stationInfoObserver = new RadioStationInfoManagerObserver(
-				new StationInformation());
-		List<Observer<RadioPlayerEntity>> playerEntityObservers = Arrays.asList(printer,
-				new CoverArtObserver(radioPlayerUI), new RadioInfoObserver(radioPlayerUI),
-				stationInfoObserver.createRadioInfoObserver());
-		List<Observer<CodecInformation>> codecObservers = Arrays.asList(new CodecObeserver(radioPlayerUI),
-				stationInfoObserver.createCodecInfoObserver());
+		List<Observer<RadioPlayerEntity>> playerEntityObservers = Arrays.asList(printer, new CoverArtObserver(radioPlayerUI), new RadioInfoObserver(radioPlayerUI), RadioStationInfoManagerObserver.createRadioInfoObserver());
+		List<Observer<CodecInformation>> codecObservers = Arrays.asList(new CodecObeserver(radioPlayerUI), RadioStationInfoManagerObserver.createCodecInfoObserver());
 		List<Observer<ErrorInformation>> errorObservers = Arrays.asList(new ErrorObserver(radioPlayerUI));
 		controller.addObservers(playerEntityObservers, codecObservers, errorObservers);
 

@@ -26,13 +26,13 @@ public class StreamInputInitializer implements Initializable {
 	private HBox dialogBox;
 	private StreamInputController controller;
 
-	private StreamInputInitializer(Stage rootStage) {
-		this.rootStage = rootStage;
+	private StreamInputInitializer(TunerLayoutInitializer rootInitializer) {
+		this.rootStage = rootInitializer.getStage();
 	}
 
-	public static StreamInputInitializer getInstance(Stage rootStage) {
+	public static StreamInputInitializer getInstance(TunerLayoutInitializer rootInitializer) {
 		if (instance == null) {
-			instance = new StreamInputInitializer(rootStage);
+			instance = new StreamInputInitializer(rootInitializer);
 		}
 		return instance;
 	}

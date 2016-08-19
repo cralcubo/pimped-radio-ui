@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import bo.roman.radio.ui.Initializable;
+import bo.roman.radio.ui.controller.StationsOverviewController;
 import bo.roman.radio.utilities.LoggerUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -17,13 +18,23 @@ public class StationsOverviewInitializer implements Initializable {
 	
 	private final static String FXML_PATH = "src/main/resources/fxml/StationsOverview.fxml";
 	
+	private final TunerLayoutInitializer rootInitializer;
+	
 	private static  StationsOverviewInitializer instance;
 	
 	private AnchorPane stationsPane;
 	
-	public static StationsOverviewInitializer getInstance() {
+	
+	private StationsOverviewController controller;
+	
+
+	public StationsOverviewInitializer(TunerLayoutInitializer rootInitializer) {
+		this.rootInitializer = rootInitializer;
+	}
+
+	public static StationsOverviewInitializer getInstance(TunerLayoutInitializer rootInitializer) {
 		if(instance == null) {
-			instance = new StationsOverviewInitializer();
+			instance = new StationsOverviewInitializer(rootInitializer);
 		}
 		return instance;
 	}
@@ -35,6 +46,10 @@ public class StationsOverviewInitializer implements Initializable {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(Paths.get(FXML_PATH).toUri().toURL());
 			stationsPane = loader.load();
+			
+			controller = loader.getController();
+			controller.setRootInitializer(rootInitializer);
+			
 		} catch (MalformedURLException e) {
 			throw new RuntimeException("There was an error finding the FXML file.", e);
 		} catch (IOException e) {
@@ -44,5 +59,9 @@ public class StationsOverviewInitializer implements Initializable {
 	
 	public AnchorPane getStationsPane() {
 		return stationsPane;
+	}
+
+	public void loadStations() {
+		controller.loadStations();
 	}
 }

@@ -8,21 +8,22 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import bo.roman.radio.ui.model.StationInformation;
+import bo.radio.tuner.entities.Station;
 import bo.roman.radio.utilities.LoggerUtils;
 
-public class RadioStationInfoManager {
-	private final static Logger logger = LoggerFactory.getLogger(RadioStationInfoManager.class);
+public class StationPlayingManager {
+	private final static Logger logger = LoggerFactory.getLogger(StationPlayingManager.class);
 	
 	private final static String DEFAULT_STREAM = "http://stream-tx3.radioparadise.com/aac-320";
 	
-	private static StationInformation currentStationPlaying;
+	private static Station currentStationPlaying;
 	
-	public static Optional<StationInformation> getCurrentStationPlaying() {
+	public static Optional<Station> getCurrentStationPlaying() {
 		return Optional.ofNullable(currentStationPlaying);
 	}
 
-	public static void setCurrentStationPlaying(StationInformation val) {
+	public static void setCurrentStationPlaying(Station val) {
+		LoggerUtils.logDebug(logger, () -> "Setting Station: " + val);
 		currentStationPlaying = val;
 	}
 	
@@ -35,7 +36,7 @@ public class RadioStationInfoManager {
 	 * 
 	 * @return
 	 */
-	public static Optional<StationInformation> getCompleteCurrentStationPlaying() {
+	public static Optional<Station> getCompleteCurrentStationPlaying() {
 		/*
 		 * Check that all the information is set in StationInformation.
 		 * We are doing this, because the Radio Station information and the 
@@ -49,11 +50,11 @@ public class RadioStationInfoManager {
 	 * Get this information from the DB
 	 * @return
 	 */
-	public static Optional<StationInformation> getLastStationPlaying() {
-		return Optional.of(new StationInformation("NO_NAME", DEFAULT_STREAM));
+	public static Optional<Station> getLastStationPlaying() {
+		return Optional.of(new Station("NO_NAME", DEFAULT_STREAM));
 	}
 	
-	private static Optional<StationInformation> getCompleteStationInformation(StationInformation si) {
+	private static Optional<Station> getCompleteStationInformation(Station si) {
 		if(si == null) {
 			LoggerUtils.logDebug(logger, () -> "There is no StationInformation object to check if all the info is set in it or not.");
 			return Optional.empty();
@@ -61,7 +62,7 @@ public class RadioStationInfoManager {
 		return checkCompleteStationInformation(si, 5, 0);
 	}
 
-	private static Optional<StationInformation> checkCompleteStationInformation(StationInformation si, int maxTries, int counter) {
+	private static Optional<Station> checkCompleteStationInformation(Station si, int maxTries, int counter) {
 		if(counter >= maxTries) {
 			logger.warn("After {} tries, the information of the StationInformation object was not complete.", counter);
 			return Optional.empty();
@@ -70,7 +71,7 @@ public class RadioStationInfoManager {
 		final int debugCounter = counter + 1;
 		LoggerUtils.logDebug(logger, () -> String.format("Try [%d] to check information complete in %s", debugCounter, si));
 		
-		if(exists(si.getName()) &&  exists(si.getCodec()) && exists(si.getStreamUrl()) && si.getBitRate() != 0f && si.getSampleRate() != 0f) {
+		if(exists(si.getName()) &&  exists(si.getCodec()) && exists(si.getStream()) && si.getBitRate() != 0f && si.getSampleRate() != 0f) {
 			return Optional.of(si);
 		}
 		

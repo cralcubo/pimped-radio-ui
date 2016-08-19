@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<HBox prefHeight="100.0" prefWidth="270.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bo.roman.radio.ui.controller.StreamInputController">
+<HBox prefHeight="100.0" prefWidth="270.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bo.roman.radio.ui.controller.CategoryCreatorController">
    <children>
       <GridPane prefHeight="100.0" prefWidth="270.0">
         <columnConstraints>
@@ -20,9 +20,9 @@
         </rowConstraints>
          <children>
             <TextArea fx:id="textArea" prefHeight="200.0" prefWidth="200.0" />
-            <Button fx:id="okButton" mnemonicParsing="false" onAction="#handleOk" text="Play" GridPane.rowIndex="1">
+            <Button fx:id="createButton" mnemonicParsing="false" onAction="#createAction" prefHeight="27.0" prefWidth="100.0" text="Create" GridPane.rowIndex="1">
                <GridPane.margin>
-                  <Insets left="220.0" />
+                  <Insets left="200.0" right="10.0" />
                </GridPane.margin>
             </Button>
          </children>

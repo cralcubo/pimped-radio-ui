@@ -23,16 +23,32 @@ public class CoverArtManager implements Initializable {
 	private final Reflection reflection;
 	private final String defaultLogoUri;
 	
+	private static CoverArtManager instance;
 	
-	public CoverArtManager(ImageView coverViewer, Rectangle coverShader) {
+	private CoverArtManager(ImageView coverViewer, Rectangle coverShader) {
 		this.coverViewer = coverViewer;
 		this.coverShader = coverShader;
 		reflection = new Reflection();
 		defaultLogoUri = Paths.get(LOGO_URI).toUri().toString();
 	}
+	
+	public static CoverArtManager getInstance() {
+		return getInstance(null, null);
+	}
+	public static CoverArtManager getInstance(ImageView coverViewer, Rectangle coverShader) {
+		if(instance == null) {
+			if(coverViewer == null || coverShader == null) {
+				throw new IllegalStateException("A new instance of CoverArtManager was tried to be created, but no ImageView and Rectangle provided.");
+			}
+			instance = new CoverArtManager(coverViewer, coverShader);
+		}
+		
+		return instance;
+	}
 
 	@Override
 	public void initialize() {
+		coverViewer.setEffect(reflection);
 		coverViewer.setImage(new Image(defaultLogoUri));
 	}
 	
@@ -51,8 +67,10 @@ public class CoverArtManager implements Initializable {
 		// Remove Blur Effect
 		coverViewer.setEffect(reflection);
 		
-		// Make shader transparent
-		fader.fadeNode(MAXOPACITY_SHADER, MINOPACITY_SHADER, coverShader);
+		if(fader != null) {
+			// Make shader transparent
+			fader.fadeNode(MAXOPACITY_SHADER, MINOPACITY_SHADER, coverShader);
+		}
 	}
 
 	public void setImage(Optional<String> uri) {

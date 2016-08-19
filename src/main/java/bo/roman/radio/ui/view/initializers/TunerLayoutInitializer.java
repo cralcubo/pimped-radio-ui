@@ -27,6 +27,7 @@ public class TunerLayoutInitializer implements Initializable {
 	private Stage thisStage;
 	private StreamInputInitializer streamInputInitializer;
 	private StationsOverviewInitializer stationsOverviewInitializer;
+	private CategoryCreatorInitializer categoryCreatorInitializer;
 
 	public TunerLayoutInitializer(Stage primaryStage) {
 		this.primaryStage = primaryStage;
@@ -57,8 +58,8 @@ public class TunerLayoutInitializer implements Initializable {
 
 			// Initialize the components in the Tuner
 			initializeInputStreamView(tunerPane);
-
 			initializeStationsOverview(tunerPane);
+			initializeCategoryCreator();
 
 		} catch (MalformedURLException e) {
 			throw new RuntimeException("There was an error finding the FXML file.", e);
@@ -67,15 +68,20 @@ public class TunerLayoutInitializer implements Initializable {
 		}
 	}
 
+	private void initializeCategoryCreator() {
+		categoryCreatorInitializer = CategoryCreatorInitializer.getInstance(this);
+		categoryCreatorInitializer.initialize();
+	}
+
 	private void initializeStationsOverview(BorderPane tunerPane) {
-		stationsOverviewInitializer = StationsOverviewInitializer.getInstance();
+		stationsOverviewInitializer = StationsOverviewInitializer.getInstance(this);
 		stationsOverviewInitializer.initialize();
 		// Set it in the body
 		tunerPane.setCenter(stationsOverviewInitializer.getStationsPane());
 	}
 
 	private void initializeInputStreamView(BorderPane tunerPane) {
-		streamInputInitializer = StreamInputInitializer.getInstance(thisStage);
+		streamInputInitializer = StreamInputInitializer.getInstance(this);
 		streamInputInitializer.initialize();
 		// Set it in the Top
 		tunerPane.setTop(streamInputInitializer.getDialogBox());
@@ -83,7 +89,20 @@ public class TunerLayoutInitializer implements Initializable {
 
 	public void showAndWait() {
 		streamInputInitializer.clearFields();
+		stationsOverviewInitializer.loadStations();
 		thisStage.showAndWait();
+	}
+	
+	public void showAddCategory() {
+		categoryCreatorInitializer.showAndWait();
+	}
+
+	public void loadStationsOverview() {
+		stationsOverviewInitializer.loadStations();
+	}
+
+	public Stage getStage() {
+		return thisStage;
 	}
 
 }
