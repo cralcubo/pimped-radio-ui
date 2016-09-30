@@ -72,4 +72,19 @@ private final static Logger logger = LoggerFactory.getLogger(StationManager.clas
 		return stationDao.findStationByName(name);
 	}
 
+	public void deleteStation(Station s) throws TunerPersistenceException {
+		LoggerUtils.logDebug(logger, () -> "Deleting station: " + s); 
+		stationDao.removeStation(s);
+		
+		Optional<Station> os = stationDao.findStation(s);
+		if(os.isPresent())
+		{
+			logger.error("Station {} was not removed.", os.get());
+		}
+	}
+
+	public void updateStation(Station station) throws TunerPersistenceException {
+		stationDao.updateStation(station);
+	}
+
 }

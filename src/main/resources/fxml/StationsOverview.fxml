@@ -5,15 +5,21 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="300.0" prefWidth="270.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bo.roman.radio.ui.controller.StationsOverviewController">
-   <children>
-      <Accordion fx:id="accordion" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <contextMenu>
-            <ContextMenu>
-              <items>
-                <MenuItem fx:id="addCategory" mnemonicParsing="false" onAction="#addCategoryAction" text="Add New Category" />
-              </items>
-            </ContextMenu>
-         </contextMenu></Accordion>
-   </children>
+<AnchorPane prefHeight="300.0" prefWidth="270.0"
+	xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="bo.roman.radio.ui.controller.StationsOverviewController">
+	<children>
+		<Accordion fx:id="accordion" AnchorPane.bottomAnchor="0.0"
+			AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+			AnchorPane.topAnchor="0.0">
+			<contextMenu>
+				<ContextMenu>
+					<items>
+						<MenuItem fx:id="addCategory" mnemonicParsing="false"
+							onAction="#addCategoryAction" text="Add New Category" />
+					</items>
+				</ContextMenu>
+			</contextMenu>
+		</Accordion>
+	</children>
 </AnchorPane>

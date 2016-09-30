@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import bo.radio.tuner.entities.Station;
 import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.utilities.LoggerUtils;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +29,7 @@ public class TunerLayoutInitializer implements Initializable {
 	private StreamInputInitializer streamInputInitializer;
 	private StationsOverviewInitializer stationsOverviewInitializer;
 	private CategoryCreatorInitializer categoryCreatorInitializer;
+	private StationEditorInitializer stationEditorInitializer;
 
 	public TunerLayoutInitializer(Stage primaryStage) {
 		this.primaryStage = primaryStage;
@@ -59,6 +61,7 @@ public class TunerLayoutInitializer implements Initializable {
 			// Initialize the components in the Tuner
 			initializeInputStreamView(tunerPane);
 			initializeStationsOverview(tunerPane);
+			initializeStationEditor();
 			initializeCategoryCreator();
 
 		} catch (MalformedURLException e) {
@@ -66,6 +69,11 @@ public class TunerLayoutInitializer implements Initializable {
 		} catch (IOException e) {
 			throw new RuntimeException("There was an error loading the TunerLayout view.");
 		}
+	}
+
+	private void initializeStationEditor() {
+		stationEditorInitializer = StationEditorInitializer.getInstance(this);
+		
 	}
 
 	private void initializeCategoryCreator() {
@@ -95,6 +103,11 @@ public class TunerLayoutInitializer implements Initializable {
 	
 	public void showAddCategory() {
 		categoryCreatorInitializer.showAndWait();
+	}
+	
+	public void showEditStation(Station s) {
+		stationEditorInitializer.showAndWait(s);
+		
 	}
 
 	public void loadStationsOverview() {

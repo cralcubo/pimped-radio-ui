@@ -15,7 +15,7 @@ import bo.roman.radio.ui.business.RadioDisplayerManager;
 import bo.roman.radio.ui.business.RadioPlayerManager;
 import bo.roman.radio.ui.business.StationPlayingManager;
 import bo.roman.radio.ui.business.tuner.CategoryManager;
-import bo.roman.radio.ui.controller.util.CodecFormatter;
+import bo.roman.radio.ui.business.tuner.StationManager;
 import bo.roman.radio.ui.view.initializers.TunerLayoutInitializer;
 import bo.roman.radio.utilities.LoggerUtils;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,10 +23,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
+import javafx.scene.input.MouseButton;
 
 public class StationsOverviewController implements Initializable {
 	private final Logger logger = LoggerFactory.getLogger(StationsOverviewController.class);
@@ -38,11 +40,13 @@ public class StationsOverviewController implements Initializable {
 	private MenuItem addCategory;
 	
 	private final CategoryManager categoryManager;
+	private final StationManager stationManager;
 
 	private TunerLayoutInitializer rootInitializer;
 	
 	public StationsOverviewController() {
 		categoryManager = CategoryManager.getInstance();
+		stationManager = StationManager.getInstance();
 	}
 	
 	@FXML
@@ -71,16 +75,31 @@ public class StationsOverviewController implements Initializable {
 					tp.setContent(stationsTable);
 				} else {
 					// Set the missing stations
+					LoggerUtils.logDebug(logger, () -> " Setting stations for category: " + c.getName());
 					ObservableList<Station> observableStations = stationsTable.getItems();
+					
 					List<Station> existentStations = observableStations.subList(0, observableStations.size());
-					List<Station> newStations = c.getStations().stream()
-																.filter(s -> !existentStations.contains(s))
-																.collect(Collectors.toList());
+					List<Station> savedStations = c.getStations();
+					
+					List<Station> newStations = savedStations.stream()
+															.filter(s -> !existentStations.contains(s))
+															.collect(Collectors.toList());
+					
+					List<Station> deletedStations = existentStations.stream()
+																	.filter(s -> !savedStations.contains(s))
+																	.collect(Collectors.toList());
 					
 					LoggerUtils.logDebug(logger, () -> "Adding new stations: " + newStations);
 					for(Station s : newStations) {
 						stationsTable.getItems().add(s);
 					}
+					
+					LoggerUtils.logDebug(logger, () -> "Deleting stations: " + deletedStations);
+					for(Station s : deletedStations){
+						stationsTable.getItems().remove(s);
+					}
+					
+					stationsTable.refresh();
 				}
 				
 			}
@@ -114,21 +133,29 @@ public class StationsOverviewController implements Initializable {
 		
 		TableColumn<Station, String> stationName = new TableColumn<>("Radio Name");
 		stationName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
-		
-		TableColumn<Station, String> stationBitrate = new TableColumn<>("bitrate");
-		stationBitrate.setCellValueFactory(cd -> new SimpleStringProperty(CodecFormatter.formatBitRate(cd.getValue().getBitRate())));
-		
-		TableColumn<Station, String> stationCodec = new TableColumn<>("codec");
-		stationCodec.setCellValueFactory(cd -> new SimpleStringProperty(CodecFormatter.formatCodec(cd.getValue().getCodec())));
-		
 		stationsTable.getColumns().add(stationName);
-		stationsTable.getColumns().add(stationBitrate);
-		stationsTable.getColumns().add(stationCodec);
 		
 		stationsTable.setOnMouseClicked((mouseEvent) -> {
-			
+			Station s = stationsTable.getSelectionModel().getSelectedItem();
+ 
+			// Trigger an option Menu to Edit | Delete the Station selected
+			if(mouseEvent.getButton().equals(MouseButton.SECONDARY)){
+				ContextMenu menu = new ContextMenu();
+				MenuItem edit = new MenuItem("Edit");
+				edit.setOnAction((actionEvent) -> {
+					editStationAction(s);
+				});
+				
+				MenuItem delete = new MenuItem("Delete");
+				delete.setOnAction(ae -> {
+					deleteStationAction(s);
+				});
+				
+				menu.getItems().addAll(edit, delete);
+				stationsTable.setContextMenu(menu);
+			}
+			// Play the Station selected on Double click
 			if(mouseEvent.getClickCount() == 2) {
-				Station s = stationsTable.getSelectionModel().getSelectedItem();
 				StationPlayingManager.setCurrentStationPlaying(s);
 				RadioPlayerManager rpm = RadioPlayerManager.getInstance();
 				AddEditButtonManager aebm = AddEditButtonManager.getInstance(); 
@@ -140,9 +167,25 @@ public class StationsOverviewController implements Initializable {
 				// Enable the Edit Station button
 				aebm.enableEdit();
 			}
+			
 		});
 		
 		return stationsTable;
+	}
+
+	private void deleteStationAction(Station s) {
+		LoggerUtils.logDebug(logger, () -> "Removing: " + s);
+		try {
+			stationManager.deleteStation(s);
+			rootInitializer.loadStationsOverview();
+		} catch (TunerPersistenceException e) {
+			logger.error("There was an error when deleting the station [{}].", s, e);
+		}
+	}
+
+	private void editStationAction(Station s) {
+		LoggerUtils.logDebug(logger, () -> "Triggering: Edit Station");
+		rootInitializer.showEditStation(s);
 	}
 
 	@FXML
@@ -154,6 +197,5 @@ public class StationsOverviewController implements Initializable {
 	public void setRootInitializer(TunerLayoutInitializer rootInitializer) {
 		this.rootInitializer = rootInitializer;
 	}
-	
 
 }
