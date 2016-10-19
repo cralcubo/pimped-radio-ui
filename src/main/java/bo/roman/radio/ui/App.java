@@ -45,11 +45,15 @@ public class App extends Application {
 		radioPlayerInitializer.show();
 	}
 
-	public void showInputStreamDialog() {
+	public void showTuner() {
 		tunerInitializer.showAndWait();
 	}
 
 	public void triggerAlert(AlertType alertType, AlertMessage alertMessage) {
 		alertInitializer.triggerAlert(alertType, alertMessage);
+	}
+
+	public TunerLayoutInitializer getTunerLayoutInitializer() {
+		return tunerInitializer;
 	}
 }

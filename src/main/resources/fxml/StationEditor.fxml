@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import org.controlsfx.control.CheckComboBox?>
 
 <HBox prefHeight="100.0" prefWidth="270.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bo.roman.radio.ui.controller.StationEditorController">
    <children>
@@ -26,11 +27,17 @@
                   <Insets left="200.0" right="10.0" />
                </GridPane.margin>
             </Button>
-            <ComboBox fx:id="comboBox" prefHeight="27.0" prefWidth="122.0" promptText="Categories" GridPane.rowIndex="1">
+            <CheckComboBox fx:id="comboBox" prefHeight="27.0" prefWidth="122.0" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
-            </ComboBox>
+            </CheckComboBox>
+            
+            <!-- <ComboBox fx:id="comboBox" prefHeight="27.0" prefWidth="122.0" promptText="Categories" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets left="10.0" />
+               </GridPane.margin>
+            </ComboBox> -->
          </children>
       </GridPane>
    </children>

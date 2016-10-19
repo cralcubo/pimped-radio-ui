@@ -5,10 +5,12 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import bo.radio.tuner.entities.Category;
 import bo.radio.tuner.entities.Station;
 import bo.radio.tuner.exceptions.TunerPersistenceException;
 import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.ui.business.tuner.StationManager;
+import bo.roman.radio.ui.view.initializers.StationEditorInitializer;
 import bo.roman.radio.utilities.LoggerUtils;
 import javafx.scene.control.ToggleButton;
 
@@ -45,13 +47,18 @@ public class AddEditButtonManager implements Initializable {
 		disableButton();
 	}
 	
-	public void addAction(Station stationToAddEdit) throws TunerPersistenceException {
+	public void addEditStation(Station stationToAddEdit, StationEditorInitializer stationEditorInitializer) throws TunerPersistenceException {
 		if (addStation.isSelected()) {
 			LoggerUtils.logDebug(logger, () -> "Adding a new Radio Station: " + stationToAddEdit);
-			stationsManager.addStation(stationToAddEdit);
+			// Set the general category
+			stationToAddEdit.getCategories().add(new Category("General"));
+			stationsManager.createStation(stationToAddEdit);
 		} else {
-			LoggerUtils.logDebug(logger, () -> "Editing Radio Station: " + stationToAddEdit);
+			Station toEdit = stationsManager.findStation(stationToAddEdit).orElse(stationToAddEdit);
+			LoggerUtils.logDebug(logger, () -> "Editing Radio Station: " + toEdit);
 			enableEdit();
+			// Trigger Station Editor
+			stationEditorInitializer.showAndWait(toEdit);
 		}
 	}
 	

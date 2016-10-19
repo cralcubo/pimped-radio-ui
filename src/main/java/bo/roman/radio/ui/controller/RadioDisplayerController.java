@@ -24,6 +24,7 @@ import bo.roman.radio.ui.business.displayer.LabelsManager;
 import bo.roman.radio.ui.business.tuner.TunerManager;
 import bo.roman.radio.ui.model.AlertMessage;
 import bo.roman.radio.ui.model.RadioPlayerInformation;
+import bo.roman.radio.ui.view.initializers.TunerLayoutInitializer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -34,7 +35,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
-public class RadioDisplayerController implements Initializable {
+public class RadioDisplayerController {
 	private final static Logger logger = LoggerFactory.getLogger(RadioDisplayerController.class);
 	
 	private CoverArtManager coverArtManager;
@@ -74,7 +75,7 @@ public class RadioDisplayerController implements Initializable {
 	private Label codecLabel;
 	
 	@FXML
-	public void initialize() {
+	private void initialize() {
 		coverArtManager = CoverArtManager.getInstance(coverViewer, coverShader);
 		labelsManager = LabelsManager.getInstance(mainLabel, subLabel, extraLabel, codecLabel);
 		radioPlayerManager = RadioPlayerManager.getInstance(volume, play);
@@ -133,9 +134,9 @@ public class RadioDisplayerController implements Initializable {
 	}
 	
 	@FXML
-	private void loadStreamAction() {
+	private void loadTunerAction() {
 		if(mainApp != null) {
-			mainApp.showInputStreamDialog();
+			mainApp.showTuner();
 		}
 	}
 	
@@ -150,7 +151,8 @@ public class RadioDisplayerController implements Initializable {
 		Optional<Station> currentStation = StationPlayingManager.getCompleteCurrentStationPlaying();
 		if(currentStation.isPresent()) {
 			try {
-				addEditButtonManager.addAction(currentStation.get());
+				TunerLayoutInitializer tli = mainApp.getTunerLayoutInitializer();
+				addEditButtonManager.addEditStation(currentStation.get(), tli.getStationEditorInitializer());
 			} catch (TunerPersistenceException e) {
 				logger.error("Station could not be edit/saved.", e);
 				mainApp.triggerAlert(AlertType.ERROR, new AlertMessage.Builder()

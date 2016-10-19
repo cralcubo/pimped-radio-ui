@@ -3,17 +3,19 @@ package bo.roman.radio.ui.business.tuner;
 import java.util.List;
 import java.util.Optional;
 
-import bo.radio.tuner.CategoryDaoController;
+import bo.radio.tuner.CategoryDaoApi;
 import bo.radio.tuner.entities.Category;
 import bo.radio.tuner.exceptions.TunerPersistenceException;
 
 public class CategoryManager {
-	private CategoryDaoController daoController;
+	private CategoryDaoApi daoController;
 
 	private static CategoryManager instance;
+	private final TunerManager tunerManager;
 
 	private CategoryManager() {
-		daoController = TunerManager.getInstance().getCategoryDaoInstance();
+		tunerManager = TunerManager.getInstance();
+		daoController = tunerManager.getCategoryDaoInstance();
 	}
 
 	public static CategoryManager getInstance() {
@@ -31,8 +33,23 @@ public class CategoryManager {
 		return daoController.findCategoryByName(name);
 	}
 
-	public Category createCategory(String name) throws TunerPersistenceException {
-		return daoController.createCategory(new Category(name));
+	public Category createCategory(Category c) throws TunerPersistenceException {
+		Optional<Category> oc = findCategoryByName(c.getName());
+		if (!oc.isPresent()) {
+			Category toCreate = daoController.createCategory(c);
+			tunerManager.addCategory(toCreate);
+			return toCreate;
+		}
+
+		return oc.get();
+	}
+
+	public void deleteCategory(String name) throws TunerPersistenceException {
+		Optional<Category> oc = findCategoryByName(name);
+		if(oc.isPresent()) {
+			daoController.deleteCategory(oc.get());
+			tunerManager.deleteCategory(oc.get());
+		}
 	}
 
 }

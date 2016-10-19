@@ -25,14 +25,12 @@ public class StationEditorInitializer implements Initializable{
 	private StationEditorController controller;
 	
 	private final Stage rootStage;
-	private final TunerLayoutInitializer rootInitialzer;
 	
 	private static StationEditorInitializer instance;
 	
 	private Stage thisStage;
 	
 	private StationEditorInitializer(TunerLayoutInitializer rootInitialzer) {
-		this.rootInitialzer = rootInitialzer;
 		this.rootStage = rootInitialzer.getStage();
 	}
 	
@@ -51,7 +49,6 @@ public class StationEditorInitializer implements Initializable{
 			loader.setLocation(Paths.get(FXML_PATH).toUri().toURL());
 			HBox hBox = loader.load();
 			controller = loader.getController();
-			controller.setRootInitializer(rootInitialzer);
 			
 			thisStage = new Stage();
 			thisStage.setTitle("Station Editor");
@@ -63,6 +60,7 @@ public class StationEditorInitializer implements Initializable{
 			
 			thisStage.setOnCloseRequest(eh -> controller.clearTextArea());
 			
+			controller.setStage(thisStage);
 		} catch (MalformedURLException e) {
 			throw new RuntimeException("There was an error finding the FXML file.", e);
 		} catch (IOException e) {
@@ -72,7 +70,7 @@ public class StationEditorInitializer implements Initializable{
 	}
 	
 	public void showAndWait(Station station) {
-		controller.setStation(station);
+		controller.loadStation(station);
 		thisStage.showAndWait();
 	}
 

@@ -73,6 +73,7 @@ public class TunerLayoutInitializer implements Initializable {
 
 	private void initializeStationEditor() {
 		stationEditorInitializer = StationEditorInitializer.getInstance(this);
+		stationEditorInitializer.initialize();
 		
 	}
 
@@ -97,7 +98,6 @@ public class TunerLayoutInitializer implements Initializable {
 
 	public void showAndWait() {
 		streamInputInitializer.clearFields();
-		stationsOverviewInitializer.loadStations();
 		thisStage.showAndWait();
 	}
 	
@@ -107,7 +107,6 @@ public class TunerLayoutInitializer implements Initializable {
 	
 	public void showEditStation(Station s) {
 		stationEditorInitializer.showAndWait(s);
-		
 	}
 
 	public void loadStationsOverview() {
@@ -116,6 +115,10 @@ public class TunerLayoutInitializer implements Initializable {
 
 	public Stage getStage() {
 		return thisStage;
+	}
+
+	public StationEditorInitializer getStationEditorInitializer() {
+		return stationEditorInitializer;
 	}
 
 }

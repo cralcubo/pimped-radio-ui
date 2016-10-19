@@ -8,7 +8,7 @@
 	<packaging>jar</packaging>
 
 	<name>pimped-radio-ui</name>
-	
+
 	<developers>
 		<developer>
 			<id>cralcubo</id>
@@ -28,6 +28,7 @@
 		<junit.version>4.12</junit.version>
 		<hamcrest.version>1.3</hamcrest.version>
 		<xerces.version>2.11.0</xerces.version>
+		<controls.fx.version>8.40.12</controls.fx.version>
 		<radio.player.version>1.0.0</radio.player.version>
 		<radio.tuner.version>0.0.1-SNAPSHOT</radio.tuner.version>
 	</properties>
@@ -38,7 +39,7 @@
 			<artifactId>pimped-radio</artifactId>
 			<version>${radio.player.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>bo.radio</groupId>
 			<artifactId>pimped-radio-tuner</artifactId>
@@ -51,7 +52,13 @@
 			<version>${xerces.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>org.controlsfx</groupId>
+			<artifactId>controlsfx</artifactId>
+			<version>${controls.fx.version}</version>
+		</dependency>
+
 		<!-- Testing -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -59,13 +66,13 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
 			<version>${hamcrest.version}</version>
 			<scope>test</scope>
-		</dependency> 
+		</dependency>
 
 		<!-- Logging dependencies -->
 
