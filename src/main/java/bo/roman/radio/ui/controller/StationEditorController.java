@@ -1,7 +1,5 @@
 package bo.roman.radio.ui.controller;
 
-import java.util.stream.Collectors;
-
 import org.controlsfx.control.CheckComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 public class StationEditorController {
 
@@ -26,7 +25,7 @@ public class StationEditorController {
 	@FXML
 	Button saveButton;
 	@FXML
-	CheckComboBox<String> comboBox;
+	CheckComboBox<Category> comboBox;
 
 	private Station station;
 
@@ -40,43 +39,64 @@ public class StationEditorController {
 		this.categoryManager = CategoryManager.getInstance();
 	}
 	
-	@FXML
-	private void initialize() {
+	private void loadCombobox() {
+		comboBox.getItems().clear();
 		try {
-			comboBox.getItems().addAll(categoryManager.getAllCategories().stream()
-																		 .map(Category::getName)
-																		 .collect(Collectors.toList()));
-		} catch (TunerPersistenceException e) {
-			log.error("Error loading all the categories in the ComboBox.", e);
+			comboBox.getItems().addAll(categoryManager.getAllCategories());
+			comboBox.setConverter(new StringConverter<Category>() {
+				
+				@Override
+				public String toString(Category c) {
+					return c.getName();
+				}
+				
+				@Override
+				public Category fromString(String name) {
+					try {
+						return categoryManager.findCategoryByName(name).orElseGet(() -> new Category(name));
+					} catch (TunerPersistenceException e) {
+						log.error("Error retrieving a category from DB.");
+						return null;
+					}
+				}
+			});
+			comboBox.getCheckModel().clearChecks();
+		} catch (TunerPersistenceException e1) {
+			log.error("Error loading all the categories in the ComboBox.", e1);
 		}
 	}
 
 	@FXML
 	public void saveAction() {
 		LoggerUtils.logDebug(log, () -> "Updating Station: " + station);
-		if (!textArea.getText().equals(station.getName())) {
-			try {
-				for(String cn : comboBox.getCheckModel().getCheckedItems()) {
-					categoryManager.findCategoryByName(cn)
-								   .ifPresent(c -> station.getCategories().add(c));
-				}
-				station.setName(textArea.getText());
-				stationManager.updateStation(station);
-				thisStage.close();
-			} catch (TunerPersistenceException e) {
-				log.error("There was an error updating a station.", e);
+		try {
+			station.getCategories().clear();
+			for(Category c : comboBox.getCheckModel().getCheckedItems()) {
+				station.getCategories().add(c);
 			}
+			station.setName(textArea.getText());
+			stationManager.updateStation(station);
+			thisStage.close();
+		} catch (TunerPersistenceException e) {
+			log.error("There was an error updating a station.", e);
 		}
 	}
 
-	public void loadStation(Station station) {
-		this.station = station;
-		// We set the Name of the station in the text area
-		textArea.setText(station.getName());
-		// We set as checked the categories of this station in the combobox
-		station.getCategories().stream()
-							  .map(Category::getName)
-							  .forEach(cn -> comboBox.getCheckModel().check(cn));
+	public void loadEditor(Station station) {
+		try {
+			stationManager.findStation(station).ifPresent(s -> {
+				this.station = s;
+				// Load items in the combobox
+				loadCombobox();
+				// We set the Name of the station in the text area
+				textArea.setText(s.getName());
+				// We set as checked the categories of this station in the combobox
+				s.getCategories().forEach(c -> comboBox.getCheckModel().check(c));
+			});
+			
+		} catch (TunerPersistenceException e) {
+			log.error("There was an error finding the requested station to update.");
+		}
 	}
 
 	public void clearTextArea() {

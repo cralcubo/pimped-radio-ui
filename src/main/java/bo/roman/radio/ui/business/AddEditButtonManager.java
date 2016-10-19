@@ -54,11 +54,10 @@ public class AddEditButtonManager implements Initializable {
 			stationToAddEdit.getCategories().add(new Category("General"));
 			stationsManager.createStation(stationToAddEdit);
 		} else {
-			Station toEdit = stationsManager.findStation(stationToAddEdit).orElse(stationToAddEdit);
-			LoggerUtils.logDebug(logger, () -> "Editing Radio Station: " + toEdit);
+			LoggerUtils.logDebug(logger, () -> "Editing Radio Station: " + stationToAddEdit);
 			enableEdit();
 			// Trigger Station Editor
-			stationEditorInitializer.showAndWait(toEdit);
+			stationEditorInitializer.showAndWait(stationToAddEdit);
 		}
 	}
 	

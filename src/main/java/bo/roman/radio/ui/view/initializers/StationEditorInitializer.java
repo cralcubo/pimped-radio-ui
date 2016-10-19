@@ -70,7 +70,7 @@ public class StationEditorInitializer implements Initializable{
 	}
 	
 	public void showAndWait(Station station) {
-		controller.loadStation(station);
+		controller.loadEditor(station);
 		thisStage.showAndWait();
 	}
 
