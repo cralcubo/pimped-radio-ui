@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import bo.radio.tuner.entities.Category;
 import bo.radio.tuner.entities.Station;
 import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.utilities.LoggerUtils;
@@ -28,7 +29,8 @@ public class TunerLayoutInitializer implements Initializable {
 	private Stage thisStage;
 	private StreamInputInitializer streamInputInitializer;
 	private StationsOverviewInitializer stationsOverviewInitializer;
-	private CategoryCreatorInitializer categoryCreatorInitializer;
+	private CategoryCreatorEditorInitializer categoryCreatorInitializer;
+	private CategoryCreatorEditorInitializer categoryEditorInitializer;
 	private StationEditorInitializer stationEditorInitializer;
 
 	public TunerLayoutInitializer(Stage primaryStage) {
@@ -63,6 +65,7 @@ public class TunerLayoutInitializer implements Initializable {
 			initializeStationsOverview(tunerPane);
 			initializeStationEditor();
 			initializeCategoryCreator();
+			initializeCategoryEditor();
 
 		} catch (MalformedURLException e) {
 			throw new RuntimeException("There was an error finding the FXML file.", e);
@@ -78,8 +81,13 @@ public class TunerLayoutInitializer implements Initializable {
 	}
 
 	private void initializeCategoryCreator() {
-		categoryCreatorInitializer = CategoryCreatorInitializer.getInstance(this);
+		categoryCreatorInitializer = CategoryCreatorEditorInitializer.getCreatorInstance(this);
 		categoryCreatorInitializer.initialize();
+	}
+	
+	private void initializeCategoryEditor() {
+		categoryEditorInitializer = CategoryCreatorEditorInitializer.getEditorInstance(this);
+		categoryEditorInitializer.initialize();
 	}
 
 	private void initializeStationsOverview(BorderPane tunerPane) {
@@ -103,6 +111,10 @@ public class TunerLayoutInitializer implements Initializable {
 	
 	public void showAddCategory() {
 		categoryCreatorInitializer.showAndWait();
+	}
+	
+	public void showEditCategory(Category c) {
+		categoryEditorInitializer.showAndWait(c);
 	}
 	
 	public void showEditStation(Station s) {

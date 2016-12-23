@@ -52,4 +52,13 @@ public class CategoryManager {
 		}
 	}
 
+	public void updateCategory(Category category) throws TunerPersistenceException {
+		Optional<Category> oldCategory = daoController.getCategory(category.getId());
+		if(oldCategory.isPresent())
+		{
+			daoController.updateCategory(category);
+			tunerManager.updateCategory(oldCategory.get(), category);
+		}
+	}
+
 }

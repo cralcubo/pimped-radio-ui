@@ -114,6 +114,12 @@ public class TunerManager {
 					.findFirst()
 					.ifPresent(tp -> tunerTable.remove(tp));
 	}
+	
+	public void updateCategory(Category oldCategory, Category newCategory) {
+		LoggerUtils.logDebug(logger, () -> "Updating Category: " + oldCategory);
+		deleteCategory(oldCategory);
+		addCategory(newCategory);
+	}
 
 	private TableView<Station> createStationTable(List<Station> stations) {
 		TableView<Station> stationsTable = new TableView<>();

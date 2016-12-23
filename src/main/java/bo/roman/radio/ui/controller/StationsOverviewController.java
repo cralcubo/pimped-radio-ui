@@ -1,8 +1,11 @@
 package bo.roman.radio.ui.controller;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import bo.radio.tuner.entities.Category;
 import bo.radio.tuner.entities.Station;
 import bo.radio.tuner.exceptions.TunerPersistenceException;
 import bo.roman.radio.ui.business.AddEditButtonManager;
@@ -83,7 +86,17 @@ public class StationsOverviewController {
 
 	private void editCategory(String name) {
 		LoggerUtils.logDebug(logger, () -> "Triggering: Edit Category");
-		
+		try {
+			Optional<Category> oc = categoryManager.findCategoryByName(name);
+			if (oc.isPresent()) {
+				rootInitializer.showEditCategory(oc.get());
+				loadStations();
+			} else {
+				logger.error("The Category {} could not be found in the DB", name);
+			}
+		} catch (TunerPersistenceException e) {
+			logger.error("There was an error when updating the Category [{}].", name, e);
+		}
 	}
 
 	private void deleteCategory(String name) {
