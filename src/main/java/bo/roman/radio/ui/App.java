@@ -9,13 +9,14 @@ import bo.roman.radio.ui.model.AlertMessage;
 import bo.roman.radio.ui.view.initializers.AlertInitializer;
 import bo.roman.radio.ui.view.initializers.RadioPlayerInitializer;
 import bo.roman.radio.ui.view.initializers.TunerLayoutInitializer;
+import bo.roman.radio.utilities.ResourceFinder;
 import javafx.application.Application;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class App extends Application {
-	private static final String LOGO_URI = "src/main/resources/logo/pimped-radio-glossy.jpeg";
+	private static final String LOGO_URI = "resources/logo/icon.jpg";
 
 	private RadioPlayerInitializer radioPlayerInitializer;
 	private AlertInitializer alertInitializer;
@@ -25,13 +26,12 @@ public class App extends Application {
 		launch(args);
 	}
 
-	@SuppressWarnings("restriction")
 	@Override
 	public void start(Stage primaryStage) {
 		primaryStage.initStyle(StageStyle.TRANSPARENT);
 		primaryStage.setResizable(false);
 		primaryStage.setAlwaysOnTop(true);
-		com.apple.eawt.Application.getApplication().setDockIconImage(new ImageIcon(LOGO_URI).getImage());
+		com.apple.eawt.Application.getApplication().setDockIconImage(new ImageIcon(ResourceFinder.findFileUrl(LOGO_URI)).getImage());
 
 		// Instantiate all the UI initializers
 		radioPlayerInitializer = RadioPlayerInitializer.getInstance(primaryStage, this);

@@ -2,7 +2,6 @@ package bo.roman.radio.ui.view.initializers;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,7 @@ import bo.radio.tuner.entities.Station;
 import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.ui.controller.StationEditorController;
 import bo.roman.radio.utilities.LoggerUtils;
+import bo.roman.radio.utilities.ResourceFinder;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 public class StationEditorInitializer implements Initializable{
 	private final static Logger log = LoggerFactory.getLogger(StationEditorInitializer.class);
 	
-	private static final String FXML_PATH = "src/main/resources/fxml/StationEditor.fxml";
+	private static final String FXML_PATH = "resources/fxml/StationEditor.fxml";
 
 	private StationEditorController controller;
 	
@@ -46,7 +46,7 @@ public class StationEditorInitializer implements Initializable{
 		LoggerUtils.logDebug(log, () -> "Initializing StationEditor View");
 		FXMLLoader loader = new FXMLLoader();
 		try {
-			loader.setLocation(Paths.get(FXML_PATH).toUri().toURL());
+			loader.setLocation(ResourceFinder.findFileUrl(FXML_PATH));
 			HBox hBox = loader.load();
 			controller = loader.getController();
 			

@@ -2,7 +2,6 @@ package bo.roman.radio.ui.view.initializers;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.ui.controller.StreamInputController;
 import bo.roman.radio.utilities.LoggerUtils;
+import bo.roman.radio.utilities.ResourceFinder;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 public class StreamInputInitializer implements Initializable {
 	private final Logger log = LoggerFactory.getLogger(StreamInputInitializer.class);
 	
-	private static final String FXML_PATH = "src/main/resources/fxml/StreamInput.fxml";
+	private static final String FXML_PATH = "resources/fxml/StreamInput.fxml";
 	
 	private final Stage rootStage;
 	
@@ -42,7 +42,7 @@ public class StreamInputInitializer implements Initializable {
 		LoggerUtils.logDebug(log, () -> "Initializing StreamInput View");
 		FXMLLoader loader = new FXMLLoader();
 		try {
-			loader.setLocation(Paths.get(FXML_PATH).toUri().toURL());
+			loader.setLocation(ResourceFinder.findFileUrl(FXML_PATH));
 			dialogBox = loader.load();
 			
     		controller = loader.getController();

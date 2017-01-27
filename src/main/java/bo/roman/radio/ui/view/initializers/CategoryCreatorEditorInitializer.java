@@ -2,7 +2,6 @@ package bo.roman.radio.ui.view.initializers;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,7 @@ import bo.radio.tuner.entities.Category;
 import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.ui.controller.CategoryCreatorEditorController;
 import bo.roman.radio.utilities.LoggerUtils;
+import bo.roman.radio.utilities.ResourceFinder;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 public class CategoryCreatorEditorInitializer implements Initializable {
 	private final Logger log = LoggerFactory.getLogger(CategoryCreatorEditorInitializer.class);
 	
-	private static final String FXML_PATH = "src/main/resources/fxml/CategoryCreatorEditor.fxml";
+	private static final String FXML_PATH = "resources/fxml/CategoryCreatorEditor.fxml";
 	
 	private static CategoryCreatorEditorInitializer creatorInstance;
 	private static CategoryCreatorEditorInitializer editorInstance;
@@ -58,7 +58,7 @@ public class CategoryCreatorEditorInitializer implements Initializable {
 		LoggerUtils.logDebug(log, () -> "Initializing CategoryCreatorEditor View");
 		FXMLLoader loader = new FXMLLoader();
 		try {
-			loader.setLocation(Paths.get(FXML_PATH).toUri().toURL());
+			loader.setLocation(ResourceFinder.findFileUrl(FXML_PATH));
 			HBox hBox = loader.load();
 			thisStage = new Stage();
 			thisStage.initModality(Modality.WINDOW_MODAL);

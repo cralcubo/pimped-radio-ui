@@ -2,7 +2,6 @@ package bo.roman.radio.ui.view.initializers;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,6 +24,7 @@ import bo.roman.radio.ui.business.observers.RadioInfoObserver;
 import bo.roman.radio.ui.business.observers.RadioStationInfoManagerObserver;
 import bo.roman.radio.ui.controller.RadioDisplayerController;
 import bo.roman.radio.utilities.LoggerUtils;
+import bo.roman.radio.utilities.ResourceFinder;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -37,7 +37,7 @@ import javafx.stage.Stage;
 public class RadioPlayerInitializer implements Initializable {
 	private final static Logger logger = LoggerFactory.getLogger(RadioPlayerInitializer.class);
 
-	private static final String FXML_PATH = "src/main/resources/fxml/RadioPlayerUI.fxml";
+	private static final String FXML_PATH = "resources/fxml/RadioPlayerUI.fxml";
 
 	private final Stage primaryStage;
 	private final App mainApp;
@@ -64,7 +64,7 @@ public class RadioPlayerInitializer implements Initializable {
 		LoggerUtils.logDebug(logger, () -> "Initializing the Radio Player View");
 		FXMLLoader loader = new FXMLLoader();
 		try {
-			loader.setLocation(Paths.get(FXML_PATH).toUri().toURL());
+			loader.setLocation(ResourceFinder.findFileUrl(FXML_PATH));
 			StackPane radioPlayerUI = loader.load();
 			RadioDisplayerController controller = loader.getController();
 			controller.setMainApp(mainApp);
@@ -95,18 +95,15 @@ public class RadioPlayerInitializer implements Initializable {
 	}
 
 	private void initializeHandlers(StackPane radioPlayerUI, RadioDisplayerController controller) {
-		Observer<RadioPlayerEntity> printer = (rpe) -> {
-			System.out.println("****************************");
-			System.out.println("****************************");
-			rpe.getRadio().ifPresent(r -> System.out.println(r));
-			rpe.getSong().ifPresent(s -> System.out.println(s));
-			rpe.getAlbum().ifPresent(a -> System.out.println(a));
-			System.out.println("****************************");
-			System.out.println("****************************");
+		Observer<RadioPlayerEntity> logInfo = (rpe) -> {
+			logger.info("Now Playing:");
+			rpe.getRadio().ifPresent(r -> logger.info(r.toString()));
+			rpe.getSong().ifPresent(s -> logger.info(s.toString()));
+			rpe.getAlbum().ifPresent(a -> logger.info(a.toString()));
 		};
 
 		// Add Observers
-		List<Observer<RadioPlayerEntity>> playerEntityObservers = Arrays.asList(printer, new CoverArtObserver(radioPlayerUI), new RadioInfoObserver(radioPlayerUI), RadioStationInfoManagerObserver.createRadioInfoObserver());
+		List<Observer<RadioPlayerEntity>> playerEntityObservers = Arrays.asList(logInfo, new CoverArtObserver(radioPlayerUI), new RadioInfoObserver(radioPlayerUI), RadioStationInfoManagerObserver.createRadioInfoObserver());
 		List<Observer<CodecInformation>> codecObservers = Arrays.asList(new CodecObeserver(radioPlayerUI), RadioStationInfoManagerObserver.createCodecInfoObserver());
 		List<Observer<ErrorInformation>> errorObservers = Arrays.asList(new ErrorObserver(radioPlayerUI));
 		controller.addObservers(playerEntityObservers, codecObservers, errorObservers);

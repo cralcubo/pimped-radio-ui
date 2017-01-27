@@ -2,7 +2,6 @@ package bo.roman.radio.ui.view.initializers;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,7 @@ import bo.radio.tuner.entities.Category;
 import bo.radio.tuner.entities.Station;
 import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.utilities.LoggerUtils;
+import bo.roman.radio.utilities.ResourceFinder;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 public class TunerLayoutInitializer implements Initializable {
 	private final Logger logger = LoggerFactory.getLogger(TunerLayoutInitializer.class);
 
-	private static final String FXML_PATH = "src/main/resources/fxml/TunerLayout.fxml";
+	private static final String FXML_PATH = "resources/fxml/TunerLayout.fxml";
 
 	private static TunerLayoutInitializer instance;
 
@@ -49,7 +49,7 @@ public class TunerLayoutInitializer implements Initializable {
 		LoggerUtils.logDebug(logger, () -> "Initializing TunerLayoutInitializer View");
 		FXMLLoader loader = new FXMLLoader();
 		try {
-			loader.setLocation(Paths.get(FXML_PATH).toUri().toURL());
+			loader.setLocation(ResourceFinder.findFileUrl(FXML_PATH));
 			BorderPane tunerPane = loader.load();
 
 			thisStage = new Stage();

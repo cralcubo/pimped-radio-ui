@@ -20,6 +20,7 @@ import bo.radio.tuner.entities.Category;
 import bo.radio.tuner.entities.Station;
 import bo.radio.tuner.exceptions.TunerPersistenceException;
 import bo.roman.radio.utilities.LoggerUtils;
+import bo.roman.radio.utilities.ResourceFinder;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.control.TableColumn;
@@ -29,7 +30,7 @@ import javafx.scene.control.TitledPane;
 public class TunerManager {
 	private final Logger logger = LoggerFactory.getLogger(TunerManager.class);
 
-	private static final String DBPROPS_PATH = "src/main/resources/database.properties";
+	private static final String DBPROPS_PATH = "resources/database.properties";
 	private static TunerDaoApi tunerDao;
 
 	private static TunerManager instance;
@@ -39,7 +40,7 @@ public class TunerManager {
 	@SuppressWarnings("unchecked")
 	private TunerManager() {
 		Properties databaseProperties = new Properties();
-		try (FileInputStream fis = new FileInputStream(DBPROPS_PATH)) {
+		try (FileInputStream fis = new FileInputStream(ResourceFinder.findFilePath(DBPROPS_PATH))) {
 			databaseProperties.load(fis);
 			tunerDao = new TunerBusiness(databaseProperties);
 			// Load Stations Table
