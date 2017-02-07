@@ -14,11 +14,13 @@ import bo.roman.radio.player.model.ErrorInformation;
 import bo.roman.radio.player.model.RadioPlayerEntity;
 import bo.roman.radio.ui.App;
 import bo.roman.radio.ui.Initializable;
+import bo.roman.radio.ui.business.events.DockInfoEvent;
 import bo.roman.radio.ui.business.events.ReportErrorEvent;
 import bo.roman.radio.ui.business.events.UpdateCoverEvent;
 import bo.roman.radio.ui.business.events.UpdateLabelsEvent;
 import bo.roman.radio.ui.business.observers.CodecObeserver;
 import bo.roman.radio.ui.business.observers.CoverArtObserver;
+import bo.roman.radio.ui.business.observers.DockInfoObserver;
 import bo.roman.radio.ui.business.observers.ErrorObserver;
 import bo.roman.radio.ui.business.observers.RadioInfoObserver;
 import bo.roman.radio.ui.business.observers.RadioStationInfoManagerObserver;
@@ -103,7 +105,7 @@ public class RadioPlayerInitializer implements Initializable {
 		};
 
 		// Add Observers
-		List<Observer<RadioPlayerEntity>> playerEntityObservers = Arrays.asList(logInfo, new CoverArtObserver(radioPlayerUI), new RadioInfoObserver(radioPlayerUI), RadioStationInfoManagerObserver.createRadioInfoObserver());
+		List<Observer<RadioPlayerEntity>> playerEntityObservers = Arrays.asList(logInfo, new CoverArtObserver(radioPlayerUI), new RadioInfoObserver(radioPlayerUI), RadioStationInfoManagerObserver.createRadioInfoObserver(), new DockInfoObserver(radioPlayerUI));
 		List<Observer<CodecInformation>> codecObservers = Arrays.asList(new CodecObeserver(radioPlayerUI), RadioStationInfoManagerObserver.createCodecInfoObserver());
 		List<Observer<ErrorInformation>> errorObservers = Arrays.asList(new ErrorObserver(radioPlayerUI));
 		controller.addObservers(playerEntityObservers, codecObservers, errorObservers);
@@ -115,6 +117,7 @@ public class RadioPlayerInitializer implements Initializable {
 				event -> controller.updateLabels(event.getCodecInfo(), event.getRadioInfo()));
 		radioPlayerUI.addEventHandler(ReportErrorEvent.REPORT_ERROR,
 				event -> controller.reportError(event.getErrorInformation()));
+		radioPlayerUI.addEventHandler(DockInfoEvent.UPDATE_DOCK, e -> controller.updateDockInfo(e.getRadio()));
 	}
 
 	private void draggable(StackPane coverDisplayer) {

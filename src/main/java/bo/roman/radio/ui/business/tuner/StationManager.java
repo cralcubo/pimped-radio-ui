@@ -72,5 +72,16 @@ private final static Logger logger = LoggerFactory.getLogger(StationManager.clas
 		tunerManager.updateStation(stationDao.findStation(station).orElseGet(() -> station), station);
 		stationDao.updateStation(station);
 	}
+	
+	public Optional<Station> getLastPlayedStation() throws TunerPersistenceException {
+		LoggerUtils.logDebug(logger, () -> "Retrieving the last played Station." );
+		return stationDao.getLastPlayedStation();
+	}
+	
+	public void saveLastPlayedStation(Station station) throws TunerPersistenceException {
+		LoggerUtils.logDebug(logger, () -> "Saving the last played Station." );
+		stationDao.saveLastPlayedStation(station);
+	}
+	
 
 }

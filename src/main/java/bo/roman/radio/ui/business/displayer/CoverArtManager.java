@@ -12,8 +12,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 
 public class CoverArtManager implements Initializable {
-	private static final String LOGO_URI = "resources/logo/pimped-radio-glossy.jpeg";
 	private static final int BLUR_RATIO = 30;
+	private static final String LOGO_URI = "resources/logo/pimped-radio-glossy.jpeg";
+	private static final Image LOGO_IMAGE = new Image(ResourceFinder.findFileUri(LOGO_URI).toASCIIString());
 	
 	private static final double MAXOPACITY_SHADER = 0.5;
 	private static final double MINOPACITY_SHADER = 0.0;
@@ -21,7 +22,6 @@ public class CoverArtManager implements Initializable {
 	private final ImageView coverViewer;
 	private final Rectangle coverShader;
 	private final Reflection reflection;
-	private final String defaultLogoUri;
 	
 	private static CoverArtManager instance;
 	
@@ -29,7 +29,6 @@ public class CoverArtManager implements Initializable {
 		this.coverViewer = coverViewer;
 		this.coverShader = coverShader;
 		reflection = new Reflection();
-		defaultLogoUri = ResourceFinder.findFileUrl(LOGO_URI).toString();
 	}
 	
 	public static CoverArtManager getInstance() {
@@ -49,7 +48,7 @@ public class CoverArtManager implements Initializable {
 	@Override
 	public void initialize() {
 		coverViewer.setEffect(reflection);
-		coverViewer.setImage(new Image(defaultLogoUri));
+		coverViewer.setImage(LOGO_IMAGE);
 	}
 	
 	public void shadeIt(NodeFader fader) {
@@ -74,7 +73,8 @@ public class CoverArtManager implements Initializable {
 	}
 
 	public void setImage(Optional<String> uri) {
-		coverViewer.setImage(new Image(uri.orElse(defaultLogoUri)));
+		Optional<Image> oImage = uri.map(s -> new Image(s));
+		coverViewer.setImage(oImage.orElseGet(() -> LOGO_IMAGE));
 	}
 
 }

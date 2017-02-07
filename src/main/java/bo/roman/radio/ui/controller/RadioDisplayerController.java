@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import bo.radio.tuner.entities.Station;
 import bo.radio.tuner.exceptions.TunerPersistenceException;
+import bo.roman.radio.cover.model.Radio;
 import bo.roman.radio.player.listener.Observer;
 import bo.roman.radio.player.model.CodecInformation;
 import bo.roman.radio.player.model.ErrorInformation;
@@ -20,6 +21,7 @@ import bo.roman.radio.ui.business.RadioDisplayerManager;
 import bo.roman.radio.ui.business.RadioPlayerManager;
 import bo.roman.radio.ui.business.StationPlayingManager;
 import bo.roman.radio.ui.business.displayer.CoverArtManager;
+import bo.roman.radio.ui.business.displayer.DockInfoManager;
 import bo.roman.radio.ui.business.displayer.LabelsManager;
 import bo.roman.radio.ui.business.tuner.TunerManager;
 import bo.roman.radio.ui.model.AlertMessage;
@@ -39,6 +41,7 @@ public class RadioDisplayerController {
 	private final static Logger logger = LoggerFactory.getLogger(RadioDisplayerController.class);
 	
 	private CoverArtManager coverArtManager;
+	private DockInfoManager dockManager;
 	private RadioPlayerManager radioPlayerManager;
 	private LabelsManager labelsManager;
 	private AddEditButtonManager addEditButtonManager;
@@ -76,13 +79,14 @@ public class RadioDisplayerController {
 	
 	@FXML
 	private void initialize() {
+		dockManager = DockInfoManager.getInstance();
 		coverArtManager = CoverArtManager.getInstance(coverViewer, coverShader);
 		labelsManager = LabelsManager.getInstance(mainLabel, subLabel, extraLabel, codecLabel);
 		radioPlayerManager = RadioPlayerManager.getInstance(volume, play);
 		addEditButtonManager = AddEditButtonManager.getInstance(addEditStation);
 		displayerManager = RadioDisplayerManager.getInstance(controlsPane);
 
-		List<Initializable> controllers = Arrays.asList(coverArtManager, labelsManager, radioPlayerManager, addEditButtonManager, displayerManager);
+		List<Initializable> controllers = Arrays.asList(coverArtManager, labelsManager, radioPlayerManager, addEditButtonManager, displayerManager, dockManager);
 		controllers.forEach(Initializable::initialize);
 		
 		// Initialize Tuner Database
@@ -142,7 +146,11 @@ public class RadioDisplayerController {
 	
 	@FXML
 	private void closeAction() {
+		// Save last station played
+		StationPlayingManager.saveLastStationPlayed();
+		// Close the music player
 		radioPlayerManager.close();
+		// Close the program
 		System.exit(1);
 	}
 	
@@ -186,6 +194,10 @@ public class RadioDisplayerController {
 
 	public void updateLabels(Optional<CodecInformation> codecInfo, Optional<RadioPlayerInformation> radioInfo) {
 		labelsManager.updateLabels(codecInfo, radioInfo);
+	}
+	
+	public void updateDockInfo(Optional<Radio> oRadio) {
+		dockManager.update(oRadio);
 	}
 	
 	public void reportError(ErrorInformation e) {

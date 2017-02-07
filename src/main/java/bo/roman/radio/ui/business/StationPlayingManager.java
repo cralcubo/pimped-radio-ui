@@ -9,12 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import bo.radio.tuner.entities.Station;
+import bo.radio.tuner.exceptions.TunerPersistenceException;
+import bo.roman.radio.ui.business.tuner.StationManager;
 import bo.roman.radio.utilities.LoggerUtils;
 
 public class StationPlayingManager {
 	private final static Logger logger = LoggerFactory.getLogger(StationPlayingManager.class);
 	
-	private final static String DEFAULT_STREAM = "http://stream-tx3.radioparadise.com/aac-320";
+	private final static Station DEFAULT_STATION = new Station("Radio Paradise", "http://stream-tx3.radioparadise.com/aac-320");
 	
 	private static Station currentStationPlaying;
 	
@@ -45,13 +47,13 @@ public class StationPlayingManager {
 		return getCompleteStationInformation(currentStationPlaying);
 	}
 	
-	/**
-	 * TODO
-	 * Get this information from the DB
-	 * @return
-	 */
 	public static Optional<Station> getLastStationPlaying() {
-		return Optional.of(new Station("NO_NAME", DEFAULT_STREAM));
+		try {
+			return StationManager.getInstance().getLastPlayedStation();
+		} catch (TunerPersistenceException e) {
+			logger.error("There was an error retrieving the last station played. Returning a default station.", e);
+			return Optional.of(DEFAULT_STATION);
+		}
 	}
 	
 	private static Optional<Station> getCompleteStationInformation(Station si) {
@@ -84,6 +86,14 @@ public class StationPlayingManager {
 		}
 		
 		return checkCompleteStationInformation(si, maxTries, counter + 1);
+	}
+
+	public static void saveLastStationPlayed() {
+		try {
+			StationManager.getInstance().saveLastPlayedStation(getCurrentStationPlaying().get());
+		} catch (TunerPersistenceException e) {
+			logger.error("There was an error saving the last station played.", e);
+		}
 	}
 
 }

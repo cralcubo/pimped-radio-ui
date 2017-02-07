@@ -2,6 +2,7 @@ package bo.roman.radio.ui.business;
 
 import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.ui.business.displayer.CoverArtManager;
+import bo.roman.radio.ui.business.displayer.DockInfoManager;
 import bo.roman.radio.ui.business.displayer.LabelsManager;
 import bo.roman.radio.ui.controller.util.NodeFader;
 import javafx.scene.layout.GridPane;
@@ -52,6 +53,7 @@ public class RadioDisplayerManager implements Initializable {
 	}
 	
 	public void reloadUI() {
+		DockInfoManager.getInstance().initialize();
 		CoverArtManager.getInstance().initialize();
 		LabelsManager.getInstance().initialize();
 		AddEditButtonManager.getInstance().disableButton();
