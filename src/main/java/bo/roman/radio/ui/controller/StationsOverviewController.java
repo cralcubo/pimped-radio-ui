@@ -20,8 +20,8 @@ import bo.roman.radio.utilities.LoggerUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.MouseButton;
 
@@ -55,9 +55,10 @@ public class StationsOverviewController {
 	@SuppressWarnings("unchecked")
 	public void loadStations() {
 		accordion.getPanes().clear();
+		tunerManager.sortCategories();
 		
 		tunerManager.getTunerTable().forEach(tp -> {
-			addStationEvents((TableView<Station>) tp.getContent());
+			addStationEvents((ListView<Station>) tp.getContent());
 			addTitledPaneEvents(tp);
 			accordion.getPanes().add(tp);
 		});
@@ -108,7 +109,7 @@ public class StationsOverviewController {
 		}
 	}
 
-	private void addStationEvents(TableView<Station> stationsTable) {
+	private void addStationEvents(ListView<Station> stationsTable) {
 		LoggerUtils.logDebug(logger, () -> String.format("Adding MouseEvents to the StationTable [%s]", stationsTable));
 		stationsTable.setOnMouseClicked((mouseEvent) -> {
 			LoggerUtils.logDebug(logger, () -> "Station selected=" + stationsTable.getSelectionModel().getSelectedItem());

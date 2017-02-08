@@ -116,18 +116,7 @@ public class RadioDisplayerController {
 	@FXML
 	private void playButtonAction() {
 		if (play.isSelected()) {
-			Optional<Station> currentStation = StationPlayingManager.getCurrentStationPlaying();
-			Optional<Station> lastStationPlayed = StationPlayingManager.getLastStationPlaying();
-			if(!currentStation.isPresent() && !lastStationPlayed.isPresent()) {
-				logger.warn("There are no Radio Stations to be played.");
-				mainApp.triggerAlert(AlertType.INFORMATION, new AlertMessage.Builder()
-																			.title("Play Radio Station")
-																			.header("There were no Radio Stations played yet.")
-																			.message("Load a Radio Station to play something.")
-																			.build());
-			}
-			
-			final Station si = currentStation.orElseGet(() -> lastStationPlayed.get());
+			final Station si = StationPlayingManager.getStationToPlay();
 			radioPlayerManager.play(si);
 			// Enable Add Station button
 			addEditButtonManager.enableAdd(si);
@@ -156,11 +145,11 @@ public class RadioDisplayerController {
 	
 	@FXML
 	private void addEditAction() {
-		Optional<Station> currentStation = StationPlayingManager.getCompleteCurrentStationPlaying();
-		if(currentStation.isPresent()) {
+		Station currentStation = StationPlayingManager.getCompleteCurrentStationPlaying();
+		if(currentStation != null) {
 			try {
 				TunerLayoutInitializer tli = mainApp.getTunerLayoutInitializer();
-				addEditButtonManager.addEditStation(currentStation.get(), tli.getStationEditorInitializer());
+				addEditButtonManager.addEditStation(currentStation, tli.getStationEditorInitializer());
 			} catch (TunerPersistenceException e) {
 				logger.error("Station could not be edit/saved.", e);
 				mainApp.triggerAlert(AlertType.ERROR, new AlertMessage.Builder()

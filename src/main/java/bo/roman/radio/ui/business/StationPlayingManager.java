@@ -38,7 +38,7 @@ public class StationPlayingManager {
 	 * 
 	 * @return
 	 */
-	public static Optional<Station> getCompleteCurrentStationPlaying() {
+	public static Station getCompleteCurrentStationPlaying() {
 		/*
 		 * Check that all the information is set in StationInformation.
 		 * We are doing this, because the Radio Station information and the 
@@ -47,34 +47,25 @@ public class StationPlayingManager {
 		return getCompleteStationInformation(currentStationPlaying);
 	}
 	
-	public static Optional<Station> getLastStationPlaying() {
-		try {
-			return StationManager.getInstance().getLastPlayedStation();
-		} catch (TunerPersistenceException e) {
-			logger.error("There was an error retrieving the last station played. Returning a default station.", e);
-			return Optional.of(DEFAULT_STATION);
-		}
-	}
-	
-	private static Optional<Station> getCompleteStationInformation(Station si) {
+	private static Station getCompleteStationInformation(Station si) {
 		if(si == null) {
 			LoggerUtils.logDebug(logger, () -> "There is no StationInformation object to check if all the info is set in it or not.");
-			return Optional.empty();
+			return null;
 		}
 		return checkCompleteStationInformation(si, 5, 0);
 	}
 
-	private static Optional<Station> checkCompleteStationInformation(Station si, int maxTries, int counter) {
+	private static Station checkCompleteStationInformation(Station si, int maxTries, int counter) {
 		if(counter >= maxTries) {
 			logger.warn("After {} tries, the information of the StationInformation object was not complete.", counter);
-			return Optional.empty();
+			return null;
 		}
 		
 		final int debugCounter = counter + 1;
 		LoggerUtils.logDebug(logger, () -> String.format("Try [%d] to check information complete in %s", debugCounter, si));
 		
 		if(exists(si.getName()) &&  exists(si.getCodec()) && exists(si.getStream()) && si.getBitRate() != 0f && si.getSampleRate() != 0f) {
-			return Optional.of(si);
+			return si;
 		}
 		
 		try {
@@ -89,11 +80,26 @@ public class StationPlayingManager {
 	}
 
 	public static void saveLastStationPlayed() {
-		try {
-			StationManager.getInstance().saveLastPlayedStation(getCurrentStationPlaying().get());
-		} catch (TunerPersistenceException e) {
-			logger.error("There was an error saving the last station played.", e);
+		if (currentStationPlaying != null) {
+			try {
+				StationManager.getInstance().saveLastPlayedStation(currentStationPlaying);
+			} catch (TunerPersistenceException e) {
+				logger.error("There was an error saving the last station played.", e);
+			}
 		}
+	}
+	
+	public static Station getStationToPlay() {
+		if (currentStationPlaying == null) {
+			try {
+				return StationManager.getInstance().getLastPlayedStation().orElseGet(() -> DEFAULT_STATION);
+			} catch (TunerPersistenceException e) {
+				logger.error("There was an error retrieving the last station played. Returning a default station.", e);
+				return DEFAULT_STATION;
+			}
+		}
+		
+		return currentStationPlaying;
 	}
 
 }
