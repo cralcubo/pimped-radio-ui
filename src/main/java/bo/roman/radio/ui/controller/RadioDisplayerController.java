@@ -31,6 +31,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
@@ -66,7 +67,8 @@ public class RadioDisplayerController {
 	private ToggleButton play;
 	@FXML
 	private Slider volume;
-	
+	@FXML
+	private RadioButton pinInfo;
 	
 	@FXML
 	private Label mainLabel;
@@ -100,12 +102,16 @@ public class RadioDisplayerController {
 	
 	@FXML
 	private void onMouseEntered() {
-		displayerManager.displayPlayerInformation();
+		if(!pinInfo.isSelected()) {
+			displayerManager.displayPlayerInformation();
+		}
 	}
 	
 	@FXML
 	private void onMouseExited() {
-		displayerManager.clearPlayerInformation();
+		if(!pinInfo.isSelected()) {
+			displayerManager.clearPlayerInformation();
+		}
 	}
 	
 	@FXML

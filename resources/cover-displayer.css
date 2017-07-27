@@ -29,3 +29,18 @@
 #addEditStation:selected {
 	-fx-graphic: url('./icons/edit.png');
 }
+
+.radio-button .radio {
+    -fx-border-width: 2px;
+    -fx-border-color: #e0e0eb;
+    -fx-background-color: none;
+    -fx-background-image: none;
+    -fx-border-radius: 15px;
+    -fx-padding: 2px;
+}
+
+.radio-button .dot {
+    -fx-background-radius: 15px;
+    -fx-padding: 4px;
+    -fx-color:#000;
+}

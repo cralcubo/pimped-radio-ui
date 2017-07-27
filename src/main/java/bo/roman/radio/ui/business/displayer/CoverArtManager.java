@@ -16,7 +16,7 @@ public class CoverArtManager implements Initializable {
 	private static final String LOGO_URI = "resources/logo/pimped-radio-glossy.jpeg";
 	private static final Image LOGO_IMAGE = new Image(ResourceFinder.findFileUri(LOGO_URI).toASCIIString());
 	
-	private static final double MAXOPACITY_SHADER = 0.5;
+	private static final double MAXOPACITY_SHADER = 0.2;
 	private static final double MINOPACITY_SHADER = 0.0;
 	
 	private final ImageView coverViewer;

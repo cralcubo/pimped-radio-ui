@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.effect.Reflection?>
@@ -16,92 +17,99 @@
 <?import javafx.scene.text.Font?>
 
 <StackPane onMouseEntered="#onMouseEntered" onMouseExited="#onMouseExited" prefHeight="270.0" prefWidth="270.0" stylesheets="@../cover-displayer.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bo.roman.radio.ui.controller.RadioDisplayerController">
-   <children>
-      <ImageView fx:id="coverViewer" fitHeight="270.0" fitWidth="270.0" pickOnBounds="true" preserveRatio="true">
-         <effect>
-            <Reflection />
-         </effect></ImageView>
-      <Rectangle fx:id="coverShader" arcHeight="20.0" arcWidth="20.0" height="270.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="270.0" />
-      <GridPane fx:id="controlsPane" opacity="0.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints maxHeight="71.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="218.0" minHeight="10.0" prefHeight="218.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="46.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <GridPane>
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="244.0" minWidth="10.0" prefWidth="225.0" />
-                <ColumnConstraints hgrow="SOMETIMES" prefWidth="16.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label id="codecLabel" fx:id="codecLabel" prefHeight="17.0" prefWidth="233.0" text="ACC | 320 kbps | 44.1 kHz | Stereo" textAlignment="CENTER" textFill="#e0e0eb">
-                     <GridPane.margin>
-                        <Insets left="10.0" />
-                     </GridPane.margin>
-                  </Label>
-                  <Button id="close" fx:id="close" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#closeAction" prefHeight="16.0" prefWidth="16.0" text="x" GridPane.columnIndex="1">
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin></Button>
-               </children>
-            </GridPane>
-            <Pane prefHeight="70.0" prefWidth="258.0" GridPane.rowIndex="1">
-               <children>
-                  <Label id="subLabel" fx:id="subLabel" prefHeight="17.0" prefWidth="260.0" text="Artist" textFill="#e0e0eb" />
-                  <Label id="mainLabel" fx:id="mainLabel" prefHeight="43.0" prefWidth="260.0" text="Song" textFill="#e1e1eb">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                     <padding>
-                        <Insets top="20.0" />
-                     </padding>
-                  </Label>
-                  <Label id="extraLabel" fx:id="extraLabel" prefHeight="70.0" prefWidth="260.0" text="Album" textFill="#e0e0eb">
-                     <padding>
-                        <Insets top="40.0" />
-                     </padding>
-                  </Label>
-               </children>
-               <GridPane.margin>
-                  <Insets left="10.0" top="140.0" />
-               </GridPane.margin>
-            </Pane>
-            <GridPane prefHeight="2.0" prefWidth="270.0" GridPane.rowIndex="2">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="110.0" minWidth="10.0" prefWidth="110.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="103.0" minWidth="10.0" prefWidth="50.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="124.0" minWidth="10.0" prefWidth="110.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <ToggleButton id="play" fx:id="play" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#playButtonAction" prefHeight="27.0" prefWidth="57.0" text="play" GridPane.columnIndex="1" />
-                  <Slider fx:id="volume" onMouseClicked="#volumeAction" onMouseDragged="#volumeAction" prefHeight="38.0" prefWidth="108.0" value="100.0" GridPane.columnIndex="2">
-                     <GridPane.margin>
-                        <Insets bottom="15.0" left="10.0" right="10.0" top="20.0" />
-                     </GridPane.margin>
-                  </Slider>
-                  <Button id="load" fx:id="load" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#loadTunerAction" text="Load">
-                     <GridPane.margin>
-                        <Insets left="60.0" />
-                     </GridPane.margin>
-                  </Button>
-                  <ToggleButton id="addEditStation" fx:id="addEditStation" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#addEditAction" prefHeight="34.0" prefWidth="0.0" text="Add">
-                     <GridPane.margin>
-                        <Insets left="10.0" />
-                     </GridPane.margin>
-                  </ToggleButton>
-               </children>
-            </GridPane>
-         </children>
-      </GridPane>
-   </children>
+	<children>
+		<ImageView fx:id="coverViewer" fitHeight="270.0" fitWidth="270.0" pickOnBounds="true" preserveRatio="true">
+			<effect>
+				<Reflection />
+			</effect>
+		</ImageView>
+		<Rectangle fx:id="coverShader" arcHeight="20.0" arcWidth="20.0" height="270.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="270.0" />
+		<GridPane fx:id="controlsPane" opacity="0.0">
+			<columnConstraints>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints maxHeight="71.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+				<RowConstraints maxHeight="218.0" minHeight="10.0" prefHeight="218.0" vgrow="SOMETIMES" />
+				<RowConstraints maxHeight="46.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+			</rowConstraints>
+			<children>
+				<GridPane>
+					<columnConstraints>
+						<ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="230.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
+						<ColumnConstraints hgrow="SOMETIMES" maxWidth="22.0" minWidth="20.0" prefWidth="21.0" />
+					</columnConstraints>
+					<rowConstraints>
+						<RowConstraints vgrow="SOMETIMES" />
+					</rowConstraints>
+					<children>
+						<Label id="codecLabel" fx:id="codecLabel" prefHeight="17.0" prefWidth="233.0" text="ACC | 320 kbps | 44.1 kHz | Stereo" textAlignment="CENTER" textFill="#e0e0eb">
+							<font>
+								<Font name="System" size="12.0" />
+							</font>
+							<GridPane.margin>
+								<Insets left="10.0" />
+							</GridPane.margin>
+						</Label>
+                  		<RadioButton id="pinInfo" fx:id="pinInfo" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" GridPane.columnIndex="1" />
+						<Button id="close" fx:id="close" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#closeAction" prefHeight="20.0" prefWidth="20.0" text="x" GridPane.columnIndex="2">
+							<GridPane.margin>
+								<Insets left="-7.0" />
+							</GridPane.margin>
+						</Button>
+					</children>
+				</GridPane>
+				<Pane prefHeight="70.0" prefWidth="258.0" GridPane.rowIndex="1">
+					<children>
+						<Label id="subLabel" fx:id="subLabel" prefHeight="17.0" prefWidth="260.0" text="Artist" textFill="#e0e0eb" />
+						<Label id="mainLabel" fx:id="mainLabel" prefHeight="43.0" prefWidth="260.0" text="Song" textFill="#e1e1eb">
+							<font>
+								<Font name="System Bold" size="18.0" />
+							</font>
+							<padding>
+								<Insets top="20.0" />
+							</padding>
+						</Label>
+						<Label id="extraLabel" fx:id="extraLabel" prefHeight="70.0" prefWidth="260.0" text="Album" textFill="#e0e0eb">
+							<padding>
+								<Insets top="40.0" />
+							</padding>
+						</Label>
+					</children>
+					<GridPane.margin>
+						<Insets left="10.0" top="140.0" />
+					</GridPane.margin>
+				</Pane>
+				<GridPane prefHeight="2.0" prefWidth="270.0" GridPane.rowIndex="2">
+					<columnConstraints>
+						<ColumnConstraints hgrow="SOMETIMES" maxWidth="110.0" minWidth="10.0" prefWidth="110.0" />
+						<ColumnConstraints hgrow="SOMETIMES" maxWidth="103.0" minWidth="10.0" prefWidth="50.0" />
+						<ColumnConstraints hgrow="SOMETIMES" maxWidth="124.0" minWidth="10.0" prefWidth="110.0" />
+					</columnConstraints>
+					<rowConstraints>
+						<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+					</rowConstraints>
+					<children>
+						<ToggleButton id="play" fx:id="play" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#playButtonAction" prefHeight="27.0" prefWidth="57.0" text="play" GridPane.columnIndex="1" />
+						<Slider fx:id="volume" onMouseClicked="#volumeAction" onMouseDragged="#volumeAction" prefHeight="38.0" prefWidth="108.0" value="100.0" GridPane.columnIndex="2">
+							<GridPane.margin>
+								<Insets bottom="15.0" left="10.0" right="10.0" top="20.0" />
+							</GridPane.margin>
+						</Slider>
+						<Button id="load" fx:id="load" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#loadTunerAction" text="Load">
+							<GridPane.margin>
+								<Insets left="60.0" />
+							</GridPane.margin>
+						</Button>
+						<ToggleButton id="addEditStation" fx:id="addEditStation" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#addEditAction" prefHeight="34.0" prefWidth="0.0" text="Add">
+							<GridPane.margin>
+								<Insets left="10.0" />
+							</GridPane.margin>
+						</ToggleButton>
+					</children>
+				</GridPane>
+			</children>
+		</GridPane>
+	</children>
 </StackPane>

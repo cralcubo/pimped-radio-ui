@@ -59,6 +59,7 @@ public class TunerLayoutInitializer implements Initializable {
 
 			Scene scene = new Scene(tunerPane);
 			thisStage.setScene(scene);
+			thisStage.setResizable(false);
 
 			// Initialize the components in the Tuner
 			initializeInputStreamView(tunerPane);

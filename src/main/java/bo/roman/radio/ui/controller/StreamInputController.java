@@ -12,6 +12,7 @@ import bo.roman.radio.ui.business.StationPlayingManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 public class StreamInputController implements Initializable {
@@ -26,6 +27,11 @@ public class StreamInputController implements Initializable {
 	@FXML
 	public void initialize() { 
 		textArea.clear();
+		textArea.setOnKeyPressed(e -> {
+			if(KeyCode.ENTER.equals(e.getCode())) {
+				handleOk();
+			}
+		});
 	}
 	
 	@FXML
