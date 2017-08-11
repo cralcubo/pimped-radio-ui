@@ -16,7 +16,7 @@ public class CoverArtManager implements Initializable {
 	private static final String LOGO_URI = "resources/logo/pimped-radio-glossy.jpeg";
 	private static final Image LOGO_IMAGE = new Image(ResourceFinder.findFileUri(LOGO_URI).toASCIIString());
 	
-	private static final double MAXOPACITY_SHADER = 0.2;
+	private static final double MAXOPACITY_SHADER = 0.4;
 	private static final double MINOPACITY_SHADER = 0.0;
 	
 	private final ImageView coverViewer;
@@ -58,8 +58,10 @@ public class CoverArtManager implements Initializable {
 		blur.setInput(reflection);
 		coverViewer.setEffect(blur);
 		
-		// Apply a layer that will shade the blurred Cover Art
-		fader.fadeNode(MINOPACITY_SHADER, MAXOPACITY_SHADER, coverShader);
+		if(fader != null) {
+			// Apply a layer that will shade the blurred Cover Art
+			fader.fadeNode(MINOPACITY_SHADER, MAXOPACITY_SHADER, coverShader);
+		}
 	}
 	
 	public void clearIt(NodeFader fader) {
@@ -69,6 +71,16 @@ public class CoverArtManager implements Initializable {
 		if(fader != null) {
 			// Make shader transparent
 			fader.fadeNode(MAXOPACITY_SHADER, MINOPACITY_SHADER, coverShader);
+		}
+	}
+	
+	public void shadeUnblurIt(NodeFader fader) {
+		// Remove Blur Effect
+		coverViewer.setEffect(reflection);
+		
+		if(fader != null) {
+			// Apply a layer that will shade the blurred Cover Art
+			fader.fadeNode(MINOPACITY_SHADER, MAXOPACITY_SHADER, coverShader);
 		}
 	}
 

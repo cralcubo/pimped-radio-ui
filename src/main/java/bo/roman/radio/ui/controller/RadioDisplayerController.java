@@ -3,6 +3,7 @@ package bo.roman.radio.ui.controller;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,15 +103,19 @@ public class RadioDisplayerController {
 	
 	@FXML
 	private void onMouseEntered() {
-		if(!pinInfo.isSelected()) {
-			displayerManager.displayPlayerInformation();
-		}
+		pinUnselectedAction(RadioDisplayerManager::displayPlayerInformation);
 	}
 	
 	@FXML
 	private void onMouseExited() {
-		if(!pinInfo.isSelected()) {
-			displayerManager.clearPlayerInformation();
+		pinUnselectedAction(RadioDisplayerManager::clearPlayerInformation);
+	}
+	
+	private void pinUnselectedAction(Consumer<RadioDisplayerManager> action) {
+		if (pinInfo.isSelected()) {
+			displayerManager.unblurPlayerInformation();
+		} else {
+			action.accept(displayerManager);
 		}
 	}
 	

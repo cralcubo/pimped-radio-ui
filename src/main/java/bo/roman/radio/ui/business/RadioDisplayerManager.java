@@ -52,11 +52,19 @@ public class RadioDisplayerManager implements Initializable {
 		fader.fadeNode(MAXOPACITY_INFO, MINOPACITY_INFO, controlsPane);
 	}
 	
+	public void unblurPlayerInformation() {
+		CoverArtManager.getInstance().shadeUnblurIt(fader);
+		// Make Player Controls and Song Info appear 
+		fader.fadeNode(MINOPACITY_INFO, MAXOPACITY_INFO, controlsPane);
+	}
+	
 	public void reloadUI() {
 		DockInfoManager.getInstance().initialize();
 		CoverArtManager.getInstance().initialize();
 		LabelsManager.getInstance().initialize();
 		AddEditButtonManager.getInstance().disableButton();
 	}
+
+	
 
 }

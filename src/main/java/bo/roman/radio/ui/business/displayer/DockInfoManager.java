@@ -1,5 +1,6 @@
 package bo.roman.radio.ui.business.displayer;
 
+import java.awt.Image;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -33,16 +34,22 @@ public class DockInfoManager implements Initializable {
 	
 	@Override
 	public void initialize() {
-		Application.getApplication().setDockIconImage(defaultIcon.getImage());
+		setDockImage(defaultIcon.getImage());
 	}
 	
 	public void update(Optional<Radio> oRadio) {
-		ImageIcon icon = oRadio.flatMap(r -> r.getLogoUri()
-								.flatMap(uri -> convertSilently(uri)))
-									.map(url -> new ImageIcon(url))
-									.orElseGet(() -> defaultIcon);
-		
-		Application.getApplication().setDockIconImage(icon.getImage());
+		ImageIcon icon = oRadio.flatMap(r -> r.getLogoUri()//
+							   .flatMap(uri -> convertSilently(uri)))//
+							   .map(url -> new ImageIcon(url))//
+							   .orElseGet(() -> defaultIcon);//
+		setDockImage(icon.getImage());
+	}
+	
+	private void setDockImage(Image img) {
+		Application app = Application.getApplication();
+		if(app != null) {
+			app.setDockIconImage(img);
+		}
 	}
 	
 	private static Optional<URL> convertSilently(URI uri) {
