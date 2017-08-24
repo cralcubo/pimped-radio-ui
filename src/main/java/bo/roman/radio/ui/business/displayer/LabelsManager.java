@@ -7,7 +7,6 @@ import bo.roman.radio.player.model.ErrorInformation;
 import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.ui.controller.util.CodecFormatter;
 import bo.roman.radio.ui.model.RadioPlayerInformation;
-import bo.roman.radio.utilities.StringUtils;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 
@@ -71,9 +70,9 @@ public class LabelsManager implements Initializable {
 
 	private void updateRadioInfoLabels(RadioPlayerInformation ri) {
 		Platform.runLater(() -> {
-			mainLabel.setText(StringUtils.removeBracketsInfo(ri.getMainInfo()));
-			subLabel.setText(StringUtils.removeBracketsInfo(ri.getSubInfo()));
-			extraLabel.setText(StringUtils.removeBracketsInfo(ri.getExtraInfo()));
+			mainLabel.setText(ri.getMainInfo());
+			subLabel.setText(ri.getSubInfo());
+			extraLabel.setText(ri.getExtraInfo());
 		});
 	}
 }

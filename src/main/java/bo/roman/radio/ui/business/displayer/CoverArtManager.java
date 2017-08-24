@@ -5,6 +5,7 @@ import java.util.Optional;
 import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.ui.controller.util.NodeFader;
 import bo.roman.radio.utilities.ResourceFinder;
+import javafx.application.Platform;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.effect.Reflection;
 import javafx.scene.image.Image;
@@ -86,7 +87,7 @@ public class CoverArtManager implements Initializable {
 
 	public void setImage(Optional<String> uri) {
 		Optional<Image> oImage = uri.map(s -> new Image(s));
-		coverViewer.setImage(oImage.orElseGet(() -> LOGO_IMAGE));
+		Platform.runLater(() -> coverViewer.setImage(oImage.orElseGet(() -> LOGO_IMAGE)));
 	}
 
 }

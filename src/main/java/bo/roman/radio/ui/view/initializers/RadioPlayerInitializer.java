@@ -105,8 +105,13 @@ public class RadioPlayerInitializer implements Initializable {
 		};
 
 		// Add Observers
-		List<Observer<RadioPlayerEntity>> playerEntityObservers = Arrays.asList(logInfo, new CoverArtObserver(radioPlayerUI), new RadioInfoObserver(radioPlayerUI), RadioStationInfoManagerObserver.createRadioInfoObserver(), new DockInfoObserver(radioPlayerUI));
-		List<Observer<CodecInformation>> codecObservers = Arrays.asList(new CodecObeserver(radioPlayerUI), RadioStationInfoManagerObserver.createCodecInfoObserver());
+		List<Observer<RadioPlayerEntity>> playerEntityObservers = Arrays.asList(new RadioInfoObserver(radioPlayerUI), 
+																			    new CoverArtObserver(radioPlayerUI), 
+																			    RadioStationInfoManagerObserver.createRadioInfoObserver(), 
+																			    new DockInfoObserver(radioPlayerUI), 
+																			    logInfo);
+		List<Observer<CodecInformation>> codecObservers = Arrays.asList(new CodecObeserver(radioPlayerUI), 
+																		RadioStationInfoManagerObserver.createCodecInfoObserver());
 		List<Observer<ErrorInformation>> errorObservers = Arrays.asList(new ErrorObserver(radioPlayerUI));
 		controller.addObservers(playerEntityObservers, codecObservers, errorObservers);
 
