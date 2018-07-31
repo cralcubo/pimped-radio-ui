@@ -1,3 +1,6 @@
 /bin/
-/bin/
+/target/
+/.classpath
+/.project
+/.settings
 /pimped-radio.jar
