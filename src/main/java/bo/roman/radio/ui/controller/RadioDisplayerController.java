@@ -12,6 +12,7 @@ import bo.radio.tuner.entities.Station;
 import bo.radio.tuner.exceptions.TunerPersistenceException;
 import bo.roman.radio.cover.model.Radio;
 import bo.roman.radio.player.listener.Observer;
+import bo.roman.radio.player.listener.ReactiveMediaEventListener;
 import bo.roman.radio.player.model.CodecInformation;
 import bo.roman.radio.player.model.ErrorInformation;
 import bo.roman.radio.player.model.RadioPlayerEntity;
@@ -38,6 +39,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
+import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 
 public class RadioDisplayerController {
 	private final static Logger logger = LoggerFactory.getLogger(RadioDisplayerController.class);
@@ -207,6 +209,10 @@ public class RadioDisplayerController {
 	
 	public void setMainApp(App mainApp) {
 		this.mainApp = mainApp;
+	}
+
+	public void addEventAdapter(MediaPlayerEventAdapter eventAdapter) {
+		radioPlayerManager.addEventAdapter(eventAdapter);
 	}
 	
 }

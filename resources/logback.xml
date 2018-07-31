@@ -8,7 +8,11 @@
 		</layout>
 	</appender>
 	
-	<logger name="bo.roman.radio" level="info" additivity="false">
+	<logger name="bo.roman.radio.ui.view.initializers.RadioPlayerInitializer" level="info" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	
+	<logger name="bo.roman.radio.player.listener.ReactiveMediaEventListener" level="info" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
 	

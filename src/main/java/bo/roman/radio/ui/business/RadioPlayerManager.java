@@ -83,4 +83,8 @@ public class RadioPlayerManager implements Initializable {
 	private void enableStop() {
 		playButton.setSelected(true);
 	}
+
+	public void addEventAdapter(MediaPlayerEventAdapter eventAdapter) {
+		radioPlayer.addEventsListener(eventAdapter);
+	}
 }

@@ -4,13 +4,18 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import bo.roman.radio.cover.model.Codec;
 import bo.roman.radio.player.listener.Observer;
+import bo.roman.radio.player.listener.RadioInformationFinder;
+import bo.roman.radio.player.listener.ReactiveMediaEventListener;
 import bo.roman.radio.player.model.CodecInformation;
 import bo.roman.radio.player.model.ErrorInformation;
+import bo.roman.radio.player.model.MediaPlayerInformation;
 import bo.roman.radio.player.model.RadioPlayerEntity;
 import bo.roman.radio.ui.App;
 import bo.roman.radio.ui.Initializable;
@@ -27,6 +32,8 @@ import bo.roman.radio.ui.business.observers.RadioStationInfoManagerObserver;
 import bo.roman.radio.ui.controller.RadioDisplayerController;
 import bo.roman.radio.utilities.LoggerUtils;
 import bo.roman.radio.utilities.ResourceFinder;
+import io.reactivex.Observable;
+import io.reactivex.observables.ConnectableObservable;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -79,7 +86,8 @@ public class RadioPlayerInitializer implements Initializable {
 			draggable(radioPlayerUI);
 
 			// Create observers and initialize event handlers
-			initializeHandlers(radioPlayerUI, controller);
+//			initializeHandlers(radioPlayerUI, controller);
+			initializeObservers(controller);
 
 			Scene scene = new Scene(radioPlayerUI);
 			scene.setFill(Color.TRANSPARENT);
@@ -94,6 +102,30 @@ public class RadioPlayerInitializer implements Initializable {
 
 	public void show() {
 		primaryStage.show();
+	}
+	
+	private void initializeObservers(RadioDisplayerController controller) {
+		logger.info("Initializing reactive observers");
+		ReactiveMediaEventListener mediaListener = new ReactiveMediaEventListener();
+		Observable<MediaPlayerInformation> mpio = Observable.create(mediaListener);
+		
+		ConnectableObservable<MediaPlayerInformation> connectable = mpio.publish();
+		
+		RadioInformationFinder rif = new RadioInformationFinder();
+		connectable.map(mpi -> rif.find(mpi.getoRadioName(), mpi.getoSong()))
+		.subscribe(rpe -> {
+			logger.info("Now Reactively Playing:");
+			rpe.getRadio().ifPresent(r -> logger.info(r.toString()));
+			rpe.getSong().ifPresent(s -> logger.info(s.toString()));
+			rpe.getAlbum().ifPresent(a -> logger.info(a.toString()));
+		});
+		
+		connectable.map(MediaPlayerInformation::getoCodec)
+				.map(o -> o.orElseGet(() -> new Codec.Builder().channels(8).bitRate(192f).build()))
+				.subscribe(c -> logger.info("Reactive Codec: " + c.toString()));
+		
+		connectable.connect();
+		controller.addEventAdapter(mediaListener);
 	}
 
 	private void initializeHandlers(StackPane radioPlayerUI, RadioDisplayerController controller) {
