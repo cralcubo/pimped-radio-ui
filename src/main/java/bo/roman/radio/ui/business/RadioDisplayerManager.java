@@ -64,7 +64,4 @@ public class RadioDisplayerManager implements Initializable {
 		LabelsManager.getInstance().initialize();
 		AddEditButtonManager.getInstance().disableButton();
 	}
-
-	
-
 }

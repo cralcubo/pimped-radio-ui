@@ -1,31 +1,45 @@
 package bo.roman.radio.ui.business.observers;
 
-import java.util.Optional;
+import static bo.roman.radio.utilities.LoggerUtils.logDebug;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import bo.roman.radio.player.listener.Observer;
-import bo.roman.radio.player.model.CodecInformation;
-import bo.roman.radio.ui.business.events.UpdateLabelsEvent;
-import javafx.scene.Node;
+import bo.roman.radio.ui.business.displayer.LabelsManager;
+import bo.roman.radio.ui.model.CodecInformation;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class CodecObeserver implements Observer<CodecInformation> {
 	private final static Logger logger = LoggerFactory.getLogger(CodecObeserver.class);
 	
-	private final Node node;
-	private final UpdateLabelsEvent event;
+	private final LabelsManager labelsManager;
 	
-	public CodecObeserver(Node node) {
-		this.node = node;
-		event = new UpdateLabelsEvent(UpdateLabelsEvent.UPDATE_LABELS);
+	public CodecObeserver(LabelsManager labelsManager) {
+		this.labelsManager = labelsManager;
+	}
+	
+	@Override
+	public void onSubscribe(Disposable d) {
+		logDebug(logger, () -> "Subscribed to Codec Observable Stream:" + d);
+		labelsManager.clearCodec();
 	}
 
 	@Override
-	public void update(CodecInformation codecInformation) {
-		logger.info("Updating CodecInformation with Entity {}", codecInformation);
-		event.setCodecInfo(Optional.of(codecInformation));
-		node.fireEvent(event);
+	public void onNext(CodecInformation c) {
+		logDebug(logger, () -> "Codec changed...");
+		labelsManager.updateCodecLabel(c.getCodec());
+	}
+
+	@Override
+	public void onError(Throwable e) {
+		labelsManager.clearCodec();
+	}
+
+	@Override
+	public void onComplete() {
+		logDebug(logger, () -> "Completed");
+		labelsManager.clearCodec();
 	}
 
 }

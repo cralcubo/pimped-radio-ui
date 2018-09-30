@@ -1,26 +1,35 @@
 package bo.roman.radio.ui.business.observers;
 
-import java.util.Optional;
+import bo.roman.radio.ui.business.displayer.DockInfoManager;
+import bo.roman.radio.ui.model.PlayerImageInformation;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
-import bo.roman.radio.cover.model.Radio;
-import bo.roman.radio.player.listener.Observer;
-import bo.roman.radio.player.model.RadioPlayerEntity;
-import bo.roman.radio.ui.business.events.DockInfoEvent;
-import javafx.scene.Node;
-
-public class DockInfoObserver implements Observer<RadioPlayerEntity> {
-	private final Node node;
-	private final DockInfoEvent event;
-
-	public DockInfoObserver(final Node node) {
-		this.node = node;
-		event = new DockInfoEvent(DockInfoEvent.UPDATE_DOCK);
+public class DockInfoObserver implements Observer<PlayerImageInformation> {
+	private final DockInfoManager dockManager;
+	
+	public DockInfoObserver(DockInfoManager dockManager) {
+		this.dockManager = dockManager;
 	}
 
 	@Override
-	public void update(RadioPlayerEntity entity) {
-		Optional<Radio> oRadio = entity.getRadio();
-		event.setRadio(oRadio);
-		node.fireEvent(event);
+	public void onSubscribe(Disposable d) {
+		dockManager.initialize();
 	}
+
+	@Override
+	public void onNext(PlayerImageInformation dai) {
+		dockManager.update(dai.getImageUrl());
+	}
+
+	@Override
+	public void onError(Throwable e) {
+		dockManager.initialize();
+	}
+
+	@Override
+	public void onComplete() {
+		dockManager.initialize();
+	}
+	
 }

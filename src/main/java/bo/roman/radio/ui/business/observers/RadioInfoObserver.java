@@ -1,57 +1,47 @@
 package bo.roman.radio.ui.business.observers;
 
-import java.util.Optional;
+import static bo.roman.radio.utilities.LoggerUtils.logDebug;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import bo.roman.radio.cover.model.Album;
-import bo.roman.radio.cover.model.Radio;
-import bo.roman.radio.cover.model.Song;
-import bo.roman.radio.player.listener.Observer;
-import bo.roman.radio.player.model.RadioPlayerEntity;
-import bo.roman.radio.ui.business.events.UpdateLabelsEvent;
-import bo.roman.radio.ui.model.RadioPlayerInformation;
-import bo.roman.radio.utilities.LoggerUtils;
-import javafx.scene.Node;
+import bo.roman.radio.ui.business.displayer.LabelsManager;
+import bo.roman.radio.ui.model.PlayerInformation;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
-public class RadioInfoObserver implements Observer<RadioPlayerEntity> {
+public class RadioInfoObserver implements Observer<PlayerInformation> {
 	private final static Logger logger = LoggerFactory.getLogger(RadioInfoObserver.class);
-	
-	private final Node node;
-	private final UpdateLabelsEvent event;
-	
-	public RadioInfoObserver(Node node) {
-		this.node = node;
-		event = new UpdateLabelsEvent(UpdateLabelsEvent.UPDATE_LABELS);
+	private final PlayerInformation EMPTY = new PlayerInformation("");
+	private final PlayerInformation ERROR = new PlayerInformation("", "", "Error playing the station");
+
+	private final LabelsManager labelsManager;
+
+	public RadioInfoObserver(LabelsManager labelsManager) {
+		this.labelsManager = labelsManager;
 	}
 
 	@Override
-	public void update(RadioPlayerEntity rpe) {
-		LoggerUtils.logDebug(logger, () -> "Updating RadioInfo with Entity=" + rpe);
-		// Convert RadioPlayerEntity to a RadioPlayerInformation.
-		Optional<Album> album = rpe.getAlbum();
-		Optional<Song> song = rpe.getSong();
-		Optional<Radio> radio = rpe.getRadio();
-		
-		RadioPlayerInformation ri = album.map(this::toRadioInfo).orElseGet(() -> toRadioInfo(radio, song));
-		logger.info("Updating RadioInfo with {}", ri);
-		event.setRadioInfo(Optional.of(ri));
-		node.fireEvent(event);
+	public void onSubscribe(Disposable d) {
+		logDebug(logger, () -> "Subscribed to:" + d);
+		labelsManager.updateRadioInfoLabels(EMPTY);
 	}
-	
-	private RadioPlayerInformation toRadioInfo(Album album) {
-		return new RadioPlayerInformation(album.getSongName(), album.getArtistName(), album.getAlbumName());
+
+	@Override
+	public void onNext(PlayerInformation rpi) {
+		logDebug(logger, () -> "on Next:" + rpi);
+		labelsManager.updateRadioInfoLabels(rpi);
 	}
-	
-	private RadioPlayerInformation toRadioInfo(Optional<Radio> radio, Optional<Song> song) {
-		String radioName = radio.map(Radio::getName).orElse("");
-		if(song.isPresent()) {
-			Song infoSong = song.get();
-			return new RadioPlayerInformation(infoSong.getName(), infoSong.getArtist(), radioName);
-		}
-		
-		return new RadioPlayerInformation(radioName);
+
+	@Override
+	public void onError(Throwable e) {
+		labelsManager.updateRadioInfoLabels(ERROR);
+	}
+
+	@Override
+	public void onComplete() {
+		logDebug(logger, () -> "Completed");
+		labelsManager.updateRadioInfoLabels(EMPTY);
 	}
 
 }

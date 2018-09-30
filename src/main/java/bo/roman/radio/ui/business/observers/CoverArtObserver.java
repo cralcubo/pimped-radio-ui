@@ -1,45 +1,44 @@
 package bo.roman.radio.ui.business.observers;
 
-import java.net.URI;
-import java.util.Optional;
+import static bo.roman.radio.utilities.LoggerUtils.logDebug;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import bo.roman.radio.cover.model.Album;
-import bo.roman.radio.cover.model.CoverArt;
-import bo.roman.radio.cover.model.Radio;
-import bo.roman.radio.player.listener.Observer;
-import bo.roman.radio.player.model.RadioPlayerEntity;
-import bo.roman.radio.ui.business.events.UpdateCoverEvent;
-import bo.roman.radio.utilities.LoggerUtils;
-import javafx.scene.Node;
+import bo.roman.radio.ui.business.displayer.CoverArtManager;
+import bo.roman.radio.ui.model.PlayerImageInformation;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
-public class CoverArtObserver implements Observer<RadioPlayerEntity> {
+public class CoverArtObserver implements Observer<PlayerImageInformation> {
 	private final static Logger logger = LoggerFactory.getLogger(CoverArtObserver.class);
-	private final Node node;
-	private final UpdateCoverEvent event;
-	
-	public CoverArtObserver(Node node) {
-		this.node = node;
-		event = new UpdateCoverEvent(UpdateCoverEvent.UPDATE_IMAGE);
+	private final CoverArtManager coverManager;
+
+	public CoverArtObserver(CoverArtManager coverManager) {
+		this.coverManager = coverManager;
 	}
-	
+
 	@Override
-	public void update(RadioPlayerEntity rpe) {
-		Optional<URI> ca = rpe.getAlbum()
-				.flatMap(Album::getCoverArt)
-				.flatMap(CoverArt::getLargeUri);
-		Optional<URI> cr = rpe.getRadio().flatMap(Radio::getLogoUri);
-		
-		LoggerUtils.logDebug(logger, () -> String.format("Updating CoverArt with Entities { Album[%s] , Radio[%s] }", ca, cr));
-		
-		Optional<URI> oUri = Optional.ofNullable(ca.orElseGet(() -> cr.orElse(null))); 
-		Optional<String> oUrl = oUri.map(uri -> uri.toString());
-		
-		logger.info("Updating CoverArt with {}", oUrl);
-		event.setImageUrl(oUrl);
-		node.fireEvent(event);
+	public void onSubscribe(Disposable d) {
+		logDebug(logger, () -> "Subscribed to Album Observable Stream");
+		coverManager.initialize();
+	}
+
+	@Override
+	public void onNext(PlayerImageInformation imageInfo) {
+		logDebug(logger, () -> "Album playing has changed");
+		coverManager.setImage(imageInfo.getImageUrl().toString());
+	}
+
+	@Override
+	public void onError(Throwable e) {
+		coverManager.initialize();
+	}
+
+	@Override
+	public void onComplete() {
+		logDebug(logger, () -> "Completed");
+		coverManager.initialize();
 	}
 
 }

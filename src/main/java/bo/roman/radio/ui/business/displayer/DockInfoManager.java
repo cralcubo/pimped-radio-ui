@@ -1,63 +1,39 @@
 package bo.roman.radio.ui.business.displayer;
 
 import java.awt.Image;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
-import java.util.Optional;
 
 import javax.swing.ImageIcon;
 
 import com.apple.eawt.Application;
 
-import bo.roman.radio.cover.model.Radio;
 import bo.roman.radio.ui.Initializable;
-import bo.roman.radio.utilities.ResourceFinder;
+import bo.roman.radio.ui.model.PlayerImageInformation;
 
 public class DockInfoManager implements Initializable {
-	private static final String DEFAULT_LOGO = "resources/logo/pimped-radio-glossy.jpeg";
-	private static final URL DEFAULTLOGO_URL = ResourceFinder.findFileUrl(DEFAULT_LOGO);
-	
+	private static final ImageIcon DEFAULT_IMAGE = new ImageIcon(PlayerImageInformation.DEFAULT.getImageUrl());
 	private static DockInfoManager instance;
-	private final ImageIcon defaultIcon;
 	
-	public DockInfoManager() {
-		defaultIcon = new ImageIcon(DEFAULTLOGO_URL);
-	}
-
 	public static DockInfoManager getInstance() {
 		if (instance == null) {
 			instance = new DockInfoManager();
 		}
 		return instance;
 	}
-	
+
 	@Override
 	public void initialize() {
-		setDockImage(defaultIcon.getImage());
+		setDockImage(DEFAULT_IMAGE.getImage());
 	}
-	
-	public void update(Optional<Radio> oRadio) {
-		ImageIcon icon = oRadio.flatMap(r -> r.getLogoUri()//
-							   .flatMap(uri -> convertSilently(uri)))//
-							   .map(url -> new ImageIcon(url))//
-							   .orElseGet(() -> defaultIcon);//
-		setDockImage(icon.getImage());
+
+	public void update(URL imageUrl) {
+		setDockImage(new ImageIcon(imageUrl).getImage());
 	}
-	
+
 	private void setDockImage(Image img) {
 		Application app = Application.getApplication();
-		if(app != null) {
+		if (app != null) {
 			app.setDockIconImage(img);
 		}
 	}
-	
-	private static Optional<URL> convertSilently(URI uri) {
-		try {
-			return Optional.of(uri.toURL());
-		} catch (MalformedURLException e) {
-			return Optional.empty();
-		}
-	}
-
 }

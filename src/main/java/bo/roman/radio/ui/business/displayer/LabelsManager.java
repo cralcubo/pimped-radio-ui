@@ -1,18 +1,12 @@
 package bo.roman.radio.ui.business.displayer;
 
-import java.util.Optional;
-
-import bo.roman.radio.player.model.CodecInformation;
-import bo.roman.radio.player.model.ErrorInformation;
+import bo.roman.radio.player.model.Codec;
 import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.ui.controller.util.CodecFormatter;
-import bo.roman.radio.ui.model.RadioPlayerInformation;
-import javafx.application.Platform;
+import bo.roman.radio.ui.model.PlayerInformation;
 import javafx.scene.control.Label;
 
 public class LabelsManager implements Initializable {
-	private static final String STOP_MSG = "Stoping RadioPlayer.";
-	
 	private Label mainLabel;
 	private Label subLabel;
 	private Label extraLabel;
@@ -48,31 +42,20 @@ public class LabelsManager implements Initializable {
 		extraLabel.setText("");
 		codecLabel.setText("");
 	}
-
-	public void updateLabels(Optional<CodecInformation> codecInfo, Optional<RadioPlayerInformation> radioInfo) {
-		codecInfo.ifPresent(this::updateCodecLabel);
-		radioInfo.ifPresent(this::updateRadioInfoLabels);
+	
+	public void clearCodec() {
+		codecLabel.setText("");
 	}
 	
-	private void updateCodecLabel(CodecInformation ci) {
+	public void updateCodecLabel(Codec ci) {
 		// acc | 320 kbps | 44.1 kHz | Stereo
 		String codecInfo = String.format("%s | %s | %s | %s", CodecFormatter.formatCodec(ci.getCodec()), CodecFormatter.formatBitRate(ci.getBitRate()), CodecFormatter.formatSampleRate(ci.getSampleRate()), CodecFormatter.formatChannels(ci.getChannels()));
-		Platform.runLater(() -> codecLabel.setText(codecInfo));
-	}
-	
-	public void reportError(ErrorInformation e) {
-		Platform.runLater(() -> {
-			mainLabel.setText(e.getSource());
-			subLabel.setText(e.getMessage());
-			extraLabel.setText(STOP_MSG);
-		});
+		codecLabel.setText(codecInfo);
 	}
 
-	private void updateRadioInfoLabels(RadioPlayerInformation ri) {
-		Platform.runLater(() -> {
-			mainLabel.setText(ri.getMainInfo());
-			subLabel.setText(ri.getSubInfo());
-			extraLabel.setText(ri.getExtraInfo());
-		});
+	public void updateRadioInfoLabels(PlayerInformation ri) {
+		mainLabel.setText(ri.getMainInfo());
+		subLabel.setText(ri.getSubInfo());
+		extraLabel.setText(ri.getExtraInfo());
 	}
 }
