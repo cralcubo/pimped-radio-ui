@@ -149,7 +149,7 @@ public class RadioPlayerManager implements Initializable {
 								.map(radio -> new RadioAlbum(Optional.of(radio), Optional.empty()))
 								.map(Observable::just)//
 								.orElseGet(() -> Observable.just(defaultRadioAlbum.apply(radioName)))))
-				.subscribeOn(Schedulers.io())//
+				.subscribeOn(Schedulers.single())//
 				.distinct()//
 				.publish();
 
