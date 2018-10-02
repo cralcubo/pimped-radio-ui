@@ -86,20 +86,16 @@ public class RadioPlayerManager implements Initializable {
 
 	private void subscribeAllObservers() {
 		coverInfoStream = PublishSubject.create();
-		coverInfoStream.observeOn(JavaFxScheduler.platform())//
-				.subscribe(coverInfoObserver);
+		coverInfoStream.subscribe(coverInfoObserver);
 
 		dockInfoStream = PublishSubject.create();
-		dockInfoStream.observeOn(JavaFxScheduler.platform())//
-				.subscribe(dockInfoObserver);
+		dockInfoStream.subscribe(dockInfoObserver);
 
 		playerInfoStream = PublishSubject.create();
-		playerInfoStream.observeOn(JavaFxScheduler.platform())//
-				.subscribe(playerInfoObserver);
+		playerInfoStream.subscribe(playerInfoObserver);
 
 		codecInfoStream = PublishSubject.create();
-		codecInfoStream.observeOn(JavaFxScheduler.platform())//
-				.subscribe(codecInfoObserver);
+		codecInfoStream.subscribe(codecInfoObserver);
 	}
 
 	public void play(Station station) {
@@ -119,6 +115,7 @@ public class RadioPlayerManager implements Initializable {
 						.map(Observable::just)//
 						.orElseGet(Observable::empty))//
 				.subscribeOn(Schedulers.computation())//
+				.observeOn(JavaFxScheduler.platform())//
 				.subscribe(codecInfoStream::onNext);
 
 		enableStop();
@@ -149,8 +146,9 @@ public class RadioPlayerManager implements Initializable {
 								.map(radio -> new RadioAlbum(Optional.of(radio), Optional.empty()))
 								.map(Observable::just)//
 								.orElseGet(() -> Observable.just(defaultRadioAlbum.apply(radioName)))))
-				.subscribeOn(Schedulers.single())//
 				.distinct()//
+				.subscribeOn(Schedulers.single())//
+				.observeOn(JavaFxScheduler.platform())//
 				.publish();
 
 		// subscribe radioPlayerInfo observer
@@ -183,7 +181,7 @@ public class RadioPlayerManager implements Initializable {
 
 		radioAlbumStream.connect();
 	}
-	
+
 	private Optional<URL> toURL(URI uri) {
 		try {
 			LoggerUtils.logDebug(logger, () -> "Converting: '" + uri + "' to URL");
