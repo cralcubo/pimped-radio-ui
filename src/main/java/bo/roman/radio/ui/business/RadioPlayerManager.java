@@ -1,14 +1,21 @@
 package bo.roman.radio.ui.business;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import bo.radio.player.MediaPlayerDaoApi;
+import bo.radio.player.business.MediaPlayerBusiness;
+import bo.radio.player.entities.MediaPlayerEntity;
 import bo.radio.tuner.entities.Station;
 import bo.roman.radio.cover.ICoverArtManager;
 import bo.roman.radio.cover.model.Album;
@@ -21,6 +28,7 @@ import bo.roman.radio.ui.model.CodecInformation;
 import bo.roman.radio.ui.model.PlayerImageInformation;
 import bo.roman.radio.ui.model.PlayerInformation;
 import bo.roman.radio.utilities.LoggerUtils;
+import bo.roman.radio.utilities.ResourceFinder;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.observables.ConnectableObservable;
@@ -32,8 +40,11 @@ import javafx.scene.control.ToggleButton;
 
 public class RadioPlayerManager implements Initializable {
 	private final static Logger logger = LoggerFactory.getLogger(RadioPlayerManager.class);
+	private static final String DBPROPS_PATH = "resources/database.properties";
+	
 	private static final int MAX_VOL = 100;
-
+	
+	private final MediaPlayerDaoApi mediaPlayerDao;
 	private Slider volume;
 	private ToggleButton playButton;
 
@@ -57,6 +68,17 @@ public class RadioPlayerManager implements Initializable {
 		this.playButton = playButton;
 		radioPlayer = IRadioPlayer.getInstance;
 		coverManager = ICoverArtManager.getInstance;
+		
+		Properties properties = new Properties();
+		try (FileInputStream fis = new FileInputStream(ResourceFinder.findFilePath(DBPROPS_PATH))) {
+			properties.load(fis);
+			mediaPlayerDao = new MediaPlayerBusiness(properties);
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(String.format(
+					"There was an error loading the DB properties. The file %s does not exist.", DBPROPS_PATH), e);
+		} catch (IOException e) {
+			throw new RuntimeException(String.format("There was an error reading the DB properties.", DBPROPS_PATH), e);
+		}
 	}
 
 	public static RadioPlayerManager getInstance() {
@@ -76,8 +98,12 @@ public class RadioPlayerManager implements Initializable {
 
 	@Override
 	public void initialize() {
-		volume.setValue(MAX_VOL);
-		radioPlayer.setVolume(MAX_VOL);
+		Integer volLevel = mediaPlayerDao.getMediaPlayerState()//
+				.map(MediaPlayerEntity::getLevel)//
+				.orElse(MAX_VOL);
+		
+		volume.setValue(volLevel);
+		radioPlayer.setVolume(volLevel);
 	}
 
 	public void changeVolume() {
@@ -255,6 +281,8 @@ public class RadioPlayerManager implements Initializable {
 
 	public void close() {
 		radioPlayer.close();
+		// Save the volume level
+		mediaPlayerDao.saveMediaPlayerState(new MediaPlayerEntity((int) volume.getValue()));
 	}
 
 	public void stop() {

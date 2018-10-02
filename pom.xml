@@ -32,7 +32,7 @@
 		<controls.fx.version>8.40.12</controls.fx.version>
 		<javafx.maven.version>8.7.0</javafx.maven.version>
 		<radio.player.version>1.1.0</radio.player.version>
-		<radio.tuner.version>1.0.0</radio.tuner.version>
+		<radio.tuner.version>1.0.1</radio.tuner.version>
 		<rxjava.version>2.1.17</rxjava.version>
 		<rxjavafx.version>2.2.2</rxjavafx.version>
 	</properties>
