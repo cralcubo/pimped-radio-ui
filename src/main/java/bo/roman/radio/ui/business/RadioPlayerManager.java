@@ -41,9 +41,9 @@ import javafx.scene.control.ToggleButton;
 public class RadioPlayerManager implements Initializable {
 	private final static Logger logger = LoggerFactory.getLogger(RadioPlayerManager.class);
 	private static final String DBPROPS_PATH = "resources/database.properties";
-	
+
 	private static final int MAX_VOL = 100;
-	
+
 	private final MediaPlayerDaoApi mediaPlayerDao;
 	private Slider volume;
 	private ToggleButton playButton;
@@ -68,7 +68,7 @@ public class RadioPlayerManager implements Initializable {
 		this.playButton = playButton;
 		radioPlayer = IRadioPlayer.getInstance;
 		coverManager = ICoverArtManager.getInstance;
-		
+
 		Properties properties = new Properties();
 		try (FileInputStream fis = new FileInputStream(ResourceFinder.findFilePath(DBPROPS_PATH))) {
 			properties.load(fis);
@@ -101,7 +101,7 @@ public class RadioPlayerManager implements Initializable {
 		Integer volLevel = mediaPlayerDao.getMediaPlayerState()//
 				.map(MediaPlayerEntity::getLevel)//
 				.orElse(MAX_VOL);
-		
+
 		volume.setValue(volLevel);
 		radioPlayer.setVolume(volLevel);
 	}
@@ -112,16 +112,20 @@ public class RadioPlayerManager implements Initializable {
 
 	private void subscribeAllObservers() {
 		coverInfoStream = PublishSubject.create();
-		coverInfoStream.subscribe(coverInfoObserver);
+		coverInfoStream.observeOn(JavaFxScheduler.platform())//
+				.subscribe(coverInfoObserver);
 
 		dockInfoStream = PublishSubject.create();
-		dockInfoStream.subscribe(dockInfoObserver);
+		dockInfoStream.observeOn(JavaFxScheduler.platform())//
+				.subscribe(dockInfoObserver);
 
 		playerInfoStream = PublishSubject.create();
-		playerInfoStream.subscribe(playerInfoObserver);
+		playerInfoStream.observeOn(JavaFxScheduler.platform())//
+				.subscribe(playerInfoObserver);
 
 		codecInfoStream = PublishSubject.create();
-		codecInfoStream.subscribe(codecInfoObserver);
+		codecInfoStream.observeOn(JavaFxScheduler.platform())//
+				.subscribe(codecInfoObserver);
 	}
 
 	public void play(Station station) {
@@ -141,7 +145,6 @@ public class RadioPlayerManager implements Initializable {
 						.map(Observable::just)//
 						.orElseGet(Observable::empty))//
 				.subscribeOn(Schedulers.computation())//
-				.observeOn(JavaFxScheduler.platform())//
 				.subscribe(codecInfoStream::onNext);
 
 		enableStop();
@@ -174,7 +177,6 @@ public class RadioPlayerManager implements Initializable {
 								.orElseGet(() -> Observable.just(defaultRadioAlbum.apply(radioName)))))
 				.distinct()//
 				.subscribeOn(Schedulers.single())//
-				.observeOn(JavaFxScheduler.platform())//
 				.publish();
 
 		// subscribe radioPlayerInfo observer
