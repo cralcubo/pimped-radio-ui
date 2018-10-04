@@ -145,12 +145,10 @@ public class RadioPlayerManager implements Initializable {
 				.subscribe(this::onMediaChange, this::onMediaError, this::onMediaStop);
 
 		// Create a observable stream with the new codec calculated
-		Observable.just(radioPlayer)//
-				.flatMap(rp -> rp.calculateCodec()//
-						.map(CodecInformation::new)//
-						.map(Observable::just)//
-						.orElseGet(Observable::empty))//
-				.subscribeOn(Schedulers.computation())//
+		Observable.fromCallable(() -> radioPlayer.calculateCodec()//
+				.map(CodecInformation::new)//
+				.orElse(null))//
+				.subscribeOn(Schedulers.single())//
 				.subscribe(codecInfoStream::onNext);
 
 		// Assemble all the Station info and notify it
@@ -190,15 +188,14 @@ public class RadioPlayerManager implements Initializable {
 		radioNameStream.onNext(radioName);
 
 		ConnectableObservable<RadioAlbum> radioAlbumStream = Observable.just(mediaPlayerInformation)//
+				.distinct()//
 				.flatMap(mpi -> coverManager.getAlbumWithCover(mpi.getSong(), mpi.getArtist())//
 						.map(a -> new RadioAlbum(Optional.empty(), Optional.of(a)))//
 						.map(Observable::just)//
 						.orElseGet(() -> coverManager.getRadioWithLogo(mpi.getRadio())//
 								.map(radio -> new RadioAlbum(Optional.of(radio), Optional.empty()))
 								.map(Observable::just)//
-								.orElseGet(() -> Observable.just(defaultRadioAlbum.apply(radioName)))))
-				.distinct()//
-				.subscribeOn(Schedulers.single())//
+								.orElseGet(() -> Observable.just(defaultRadioAlbum.apply(radioName)))))//
 				.publish();
 
 		// subscribe radioPlayerInfo observer
