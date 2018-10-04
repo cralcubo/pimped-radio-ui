@@ -12,7 +12,7 @@ import io.reactivex.disposables.Disposable;
 
 public class RadioInfoObserver implements Observer<PlayerInformation> {
 	private final static Logger logger = LoggerFactory.getLogger(RadioInfoObserver.class);
-	private final PlayerInformation EMPTY = new PlayerInformation("", "", "Pimp Radio");
+	private final PlayerInformation EMPTY = new PlayerInformation("", "", "Pimped Radio");
 	private final PlayerInformation ERROR = new PlayerInformation("", "", "Error playing the station");
 
 	private final LabelsManager labelsManager;
