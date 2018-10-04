@@ -57,11 +57,11 @@ public class RadioPlayerManager implements Initializable {
 	private PublishSubject<PlayerInformation> playerInfoStream;
 	private PublishSubject<PlayerImageInformation> coverInfoStream;
 	private PublishSubject<PlayerImageInformation> dockInfoStream;
-	
+
 	// Station info streams
 	private PublishSubject<CodecInformation> codecInfoStream;
 	private PublishSubject<String> radioNameStream;
-	
+
 	private Observer<PlayerInformation> playerInfoObserver;
 	private Observer<CodecInformation> codecInfoObserver;
 	private Observer<PlayerImageInformation> dockInfoObserver;
@@ -130,7 +130,7 @@ public class RadioPlayerManager implements Initializable {
 		codecInfoStream = PublishSubject.create();
 		codecInfoStream.observeOn(JavaFxScheduler.platform())//
 				.subscribe(codecInfoObserver);
-		
+
 		radioNameStream = PublishSubject.create();
 	}
 
@@ -152,7 +152,7 @@ public class RadioPlayerManager implements Initializable {
 						.orElseGet(Observable::empty))//
 				.subscribeOn(Schedulers.computation())//
 				.subscribe(codecInfoStream::onNext);
-		
+
 		// Assemble all the Station info and notify it
 		Observable.zip(codecInfoStream, radioNameStream, (c, rn) -> {
 			Station s = new Station(rn, station.getStream());
@@ -161,7 +161,10 @@ public class RadioPlayerManager implements Initializable {
 			s.setCodec(codec.getCodec());
 			s.setSampleRate(codec.getSampleRate());
 			return s;
-		}).subscribe(StationPlayingManager::setCurrentStationPlaying);
+		}).subscribe(s -> {
+			StationPlayingManager.setCurrentStationPlaying(s);
+			AddEditButtonManager.getInstance().enableAdd(s);
+		});
 
 		enableStop();
 	}
@@ -182,7 +185,7 @@ public class RadioPlayerManager implements Initializable {
 		String song = mediaPlayerInformation.getSong();
 		String artist = mediaPlayerInformation.getArtist();
 		String radioName = mediaPlayerInformation.getRadio();
-		
+
 		// Send the radio name to the radioNameStream
 		radioNameStream.onNext(radioName);
 

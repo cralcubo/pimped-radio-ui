@@ -53,7 +53,7 @@ public class StationPlayingManager {
 					() -> "There is no StationInformation object to check if all the info is set in it or not.");
 			return null;
 		}
-		return checkCompleteStationInformation(si, 5, 0);
+		return checkCompleteStationInformation(si, 3, 0);
 	}
 
 	private static Station checkCompleteStationInformation(Station si, int maxTries, int counter) {
