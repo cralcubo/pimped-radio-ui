@@ -6,17 +6,26 @@ import bo.roman.radio.utilities.ResourceFinder;
 
 public class PlayerImageInformation {
 	private static final String DEFAULT_LOGO = "resources/logo/pimped-radio-glossy.jpeg";
-	private static final URL DEFAULTLOGO_URL = ResourceFinder.findFileUrl(DEFAULT_LOGO);
-	public static final PlayerImageInformation DEFAULT = new PlayerImageInformation(DEFAULTLOGO_URL);
+	public static final URL DEFAULTLOGO_URL = ResourceFinder.findFileUrl(DEFAULT_LOGO);
 	
-	private final URL imageUrl;
+	private final URL albumUrl;
+	private final URL radioUrl;
 	
-	public PlayerImageInformation(URL imageUrl) {
-		this.imageUrl = imageUrl;
+	public PlayerImageInformation(URL albumUrl, URL radioUrl) {
+		this.albumUrl = albumUrl;
+		this.radioUrl = radioUrl;
 	}
 	
-	public URL getImageUrl() {
-		return imageUrl;
+	public URL getAlbumUrl() {
+		return albumUrl;
+	}
+	
+	public URL getRadioUrl() {
+		return radioUrl;
 	}
 
+	@Override
+	public String toString() {
+		return "PlayerImageInformation [albumUrl=" + albumUrl + ", radioUrl=" + radioUrl + "]";
+	}
 }

@@ -19,9 +19,7 @@ import bo.roman.radio.ui.business.displayer.CoverArtManager;
 import bo.roman.radio.ui.business.displayer.DockInfoManager;
 import bo.roman.radio.ui.business.displayer.LabelsManager;
 import bo.roman.radio.ui.business.observers.CodecObeserver;
-import bo.roman.radio.ui.business.observers.CoverArtObserver;
-import bo.roman.radio.ui.business.observers.DockInfoObserver;
-import bo.roman.radio.ui.business.observers.RadioInfoObserver;
+import bo.roman.radio.ui.business.observers.PimpedRadioObserver;
 import bo.roman.radio.ui.business.tuner.TunerManager;
 import bo.roman.radio.ui.model.AlertMessage;
 import bo.roman.radio.ui.view.initializers.TunerLayoutInitializer;
@@ -87,23 +85,23 @@ public class RadioDisplayerController {
 		coverArtManager = CoverArtManager.getInstance(coverViewer, coverShader);
 		labelsManager = LabelsManager.getInstance(mainLabel, subLabel, extraLabel, codecLabel);
 		radioPlayerManager = RadioPlayerManager.getInstance(volume, play);
+		// Add observers to the radioPlayerManager
+		radioPlayerManager.setCodecInfoObserver(new CodecObeserver(labelsManager));
+		radioPlayerManager.setCoverObserver(new PimpedRadioObserver<CoverArtManager>(coverArtManager));
+		radioPlayerManager.setLabelsObserver(new PimpedRadioObserver<LabelsManager>(labelsManager));
+		radioPlayerManager.setDockObserver(new PimpedRadioObserver<DockInfoManager>(dockManager));
+		
 		addEditButtonManager = AddEditButtonManager.getInstance(addEditStation);
 		displayerManager = RadioDisplayerManager.getInstance(controlsPane);
 
-		List<Initializable> controllers = Arrays.asList(coverArtManager,// 
+		List<Initializable> controllers = Arrays.asList(coverArtManager, //
 				labelsManager, //
-				radioPlayerManager,// 
-				addEditButtonManager,// 
+				radioPlayerManager, //
+				addEditButtonManager, //
 				displayerManager, //
 				dockManager);
 		controllers.forEach(Initializable::initialize);
-		
-		// Add observers to the radioPlayerManager
-		radioPlayerManager.setRadioInfoObserver(new RadioInfoObserver(labelsManager));
-		radioPlayerManager.setCodecInfoObserver(new CodecObeserver(labelsManager));
-		radioPlayerManager.setCoverInfoObserver(new CoverArtObserver(coverArtManager));
-		radioPlayerManager.setDockInfoObserver(new DockInfoObserver(dockManager));
-		
+
 		// Initialize Tuner Database
 		try {
 			TunerManager.getInstance().initializeTunerDatabase();

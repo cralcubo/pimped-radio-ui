@@ -1,35 +1,22 @@
 package bo.roman.radio.ui.model;
 
+import bo.roman.radio.cover.model.Album;
+import bo.roman.radio.cover.model.Radio;
+
 public class PlayerInformation {
-	private final String mainInfo;
-	private final String subInfo;
-	private final String extraInfo;
+	private final Album album;
+	private final Radio radio;
 	
-	public PlayerInformation(String mainInfo, String subInfo, String extraInfo) {
-		this.mainInfo = mainInfo;
-		this.subInfo = subInfo;
-		this.extraInfo = extraInfo;
+	public PlayerInformation(Album album, Radio radio) {
+		this.album = album;
+		this.radio = radio;
 	}
 	
-	public PlayerInformation(String mainInfo) {
-		this(mainInfo, "", "");
+	public Album getAlbum() {
+		return album;
 	}
-
-	public String getMainInfo() {
-		return mainInfo;
+	
+	public Radio getRadio() {
+		return radio;
 	}
-
-	public String getSubInfo() {
-		return subInfo;
-	}
-
-	public String getExtraInfo() {
-		return extraInfo;
-	}
-
-	@Override
-	public String toString() {
-		return "RadioInformation [mainInfo=" + mainInfo + ", subInfo=" + subInfo + ", extraInfo=" + extraInfo + "]";
-	}
-
 }

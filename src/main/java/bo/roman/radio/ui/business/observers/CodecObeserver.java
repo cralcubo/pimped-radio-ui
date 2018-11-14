@@ -12,34 +12,32 @@ import io.reactivex.disposables.Disposable;
 
 public class CodecObeserver implements Observer<CodecInformation> {
 	private final static Logger logger = LoggerFactory.getLogger(CodecObeserver.class);
-	
 	private final LabelsManager labelsManager;
-	
+
 	public CodecObeserver(LabelsManager labelsManager) {
 		this.labelsManager = labelsManager;
 	}
-	
+
 	@Override
 	public void onSubscribe(Disposable d) {
-		logDebug(logger, () -> "Subscribed to Codec Observable Stream:" + d);
-		labelsManager.clearCodec();
+		// nothing really to do here
 	}
 
 	@Override
 	public void onNext(CodecInformation c) {
-		logDebug(logger, () -> "Codec changed...");
+		logDebug(logger, () -> "Codec changed:" + c.getCodec());
 		labelsManager.updateCodecLabel(c.getCodec());
 	}
 
 	@Override
 	public void onError(Throwable e) {
-		labelsManager.clearCodec();
+		labelsManager.updateCodecLabel("");
 	}
 
 	@Override
 	public void onComplete() {
 		logDebug(logger, () -> "Completed");
-		labelsManager.clearCodec();
+		labelsManager.updateCodecLabel("");
 	}
 
 }
