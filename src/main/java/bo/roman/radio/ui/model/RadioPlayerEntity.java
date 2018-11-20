@@ -3,14 +3,17 @@ package bo.roman.radio.ui.model;
 import static bo.roman.radio.utilities.ResourceFinder.findFileUri;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.Optional;
 
 import bo.roman.radio.cover.model.Album;
 import bo.roman.radio.cover.model.Radio;
+import bo.roman.radio.utilities.ResourceFinder;
 
 public class RadioPlayerEntity {
 	private static final String DEFAULT_LOGO = "resources/logo/pimped-radio-glossy.jpeg";
 	private static final Optional<URI> DEFAULTLOGO_URI = Optional.of(findFileUri(DEFAULT_LOGO));
+	public static final URL DEFAULTLOGO_URL = ResourceFinder.findFileUrl(DEFAULT_LOGO);
 	
 	private static final Album emptyAlbum = new Album.Builder().build();
 	private static final Radio pimpedRadio = new Radio.Builder()//

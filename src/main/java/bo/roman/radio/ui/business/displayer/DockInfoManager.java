@@ -15,14 +15,13 @@ import com.apple.eawt.Application;
 
 import bo.roman.radio.cover.model.Radio;
 import bo.roman.radio.ui.Initializable;
-import bo.roman.radio.ui.model.PlayerImageInformation;
 import bo.roman.radio.ui.model.RadioPlayerEntity;
 import bo.roman.radio.utilities.LoggerUtils;
 import javafx.application.Platform;
 
 public class DockInfoManager implements Initializable, Updateable {
 	private final static Logger logger = LoggerFactory.getLogger(DockInfoManager.class);
-	private static final ImageIcon DEFAULT_IMAGE = new ImageIcon(PlayerImageInformation.DEFAULTLOGO_URL);
+	private static final ImageIcon DEFAULT_IMAGE = new ImageIcon(RadioPlayerEntity.DEFAULTLOGO_URL);
 	private static DockInfoManager instance;
 
 	public static DockInfoManager getInstance() {

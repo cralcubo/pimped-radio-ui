@@ -1,6 +1,6 @@
 package bo.roman.radio.ui.business.displayer;
 
-import static bo.roman.radio.ui.model.PlayerImageInformation.DEFAULTLOGO_URL;
+import static bo.roman.radio.ui.model.RadioPlayerEntity.DEFAULTLOGO_URL;
 
 import java.net.URI;
 import java.util.Optional;

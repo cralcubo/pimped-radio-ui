@@ -1,5 +1,6 @@
 package bo.roman.radio.ui.business;
 
+import static bo.roman.radio.utilities.ExecutorUtils.fixedThreadPoolFactory;
 import static bo.roman.radio.utilities.LoggerUtils.logDebug;
 import static io.reactivex.Observable.fromCallable;
 import static java.util.Optional.ofNullable;
@@ -7,7 +8,9 @@ import static java.util.Optional.ofNullable;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,13 +23,13 @@ import bo.roman.radio.cover.ICoverArtManager;
 import bo.roman.radio.cover.model.Album;
 import bo.roman.radio.cover.model.Radio;
 import bo.roman.radio.player.IRadioPlayer;
+import bo.roman.radio.player.model.Codec;
 import bo.roman.radio.player.model.MediaPlayerInformation;
 import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.ui.business.displayer.CoverArtManager;
 import bo.roman.radio.ui.business.displayer.DockInfoManager;
 import bo.roman.radio.ui.business.displayer.LabelsManager;
 import bo.roman.radio.ui.business.observers.PimpedRadioObserver;
-import bo.roman.radio.ui.model.CodecInformation;
 import bo.roman.radio.ui.model.RadioPlayerEntity;
 import bo.roman.radio.utilities.ResourceFinder;
 import bo.roman.radio.utilities.StringUtils;
@@ -54,15 +57,19 @@ public class RadioPlayerManager implements Initializable {
 	private IRadioPlayer radioPlayer;
 	private ICoverArtManager coverManager;
 
-	// Station info streams
+	// Info streams
 	private PublishSubject<Album> albumStream;
 	private PublishSubject<Radio> radioStream;
+	private PublishSubject<Codec> codecStream;
+	private PublishSubject<Station> statioStream;
 
-	private Observer<CodecInformation> codecInfoObserver;
-	// New Observers
+	// Observers
+	private Observer<Codec> codecInfoObserver;
 	private PimpedRadioObserver<LabelsManager> labelsObserver;
 	private PimpedRadioObserver<CoverArtManager> coverObserver;
 	private PimpedRadioObserver<DockInfoManager> dockObserver;
+
+	private final ExecutorService executorService = fixedThreadPoolFactory(3);
 
 	private RadioPlayerEntity radioPlayerEntity;
 
@@ -119,11 +126,13 @@ public class RadioPlayerManager implements Initializable {
 	private void subscribeObservers() {
 		albumStream = PublishSubject.create();
 		radioStream = PublishSubject.create();
+		codecStream = PublishSubject.create();
+		statioStream = PublishSubject.create();
 
-		albumStream
+		albumStream.distinctUntilChanged()//
 				.flatMap(a -> fromCallable(() -> coverManager.getAlbumWithCover(a.getSongName(), a.getArtistName())//
 						.orElse(a))//
-								.subscribeOn(Schedulers.io()))//
+								.subscribeOn(Schedulers.from(executorService)))//
 				.subscribe(a -> {
 					logDebug(logger, () -> "Album changed:" + a.toString());
 					radioPlayerEntity.setAlbum(a);
@@ -131,9 +140,10 @@ public class RadioPlayerManager implements Initializable {
 					coverObserver.onNext(radioPlayerEntity);
 				});
 
-		radioStream.filter(r -> !r.getName().matches("^https?:\\/\\/.+$"))// filter out URLs
+		radioStream.distinctUntilChanged()//
+				.filter(r -> !r.getName().matches("^https?:\\/\\/.+$"))// filter out URLs
 				.flatMap(r -> fromCallable(() -> coverManager.getRadioWithLogo(r.getName()).orElse(r))//
-						.subscribeOn(Schedulers.io()))//
+						.subscribeOn(Schedulers.from(executorService)))//
 				.subscribe(r -> {
 					logDebug(logger, () -> "Radio changed:" + r.toString());
 					radioPlayerEntity.setRadio(r);
@@ -141,33 +151,41 @@ public class RadioPlayerManager implements Initializable {
 					coverObserver.onNext(radioPlayerEntity);
 					dockObserver.onNext(radioPlayerEntity);
 				});
+
+		codecStream.subscribe(codecInfoObserver::onNext);
+
+		// zip codecStream and radioStream to update all the info of the current played
+		// station
+		Observable.zip(radioStream.distinctUntilChanged()//
+								  .filter(r -> !r.getName().matches("^https?:\\/\\/.+$"))//
+				, statioStream //
+				, codecStream //
+				, (r, s, codec) -> {
+			s.setName(r.getName()); 
+			s.setBitRate(codec.getBitRate());
+			s.setCodec(codec.getCodec());
+			s.setSampleRate(codec.getSampleRate());
+			s.setCategories(new ArrayList<>());
+			return s;
+		}).subscribe(s -> {
+			StationPlayingManager.setCurrentStationPlaying(s);
+			AddEditButtonManager.getInstance().enableAdd(s);
+		});
 	}
 
 	public void play(Station station) {
-
 		// Get the media stream observable and subscribe to it
 		handleMediaObservable(radioPlayer.getMediaObservable());
 
 		// play the radio
 		radioPlayer.play(station.getStream());
 
-		// Create a observable stream with the new codec calculated
-		Observable.fromCallable(() -> radioPlayer.calculateCodec().map(CodecInformation::new).orElse(null))//
-				.subscribeOn(Schedulers.single())//
-				.subscribe(codecInfoObserver::onNext);
-
-		// Assemble all the Station info and notify it
-		// Observable.zip(codecInfoStream, radioNameStream, (c, rn) -> {
-		// Station s = new Station(rn, station.getStream());
-		// Codec codec = c.getCodec();
-		// s.setBitRate(codec.getBitRate());
-		// s.setCodec(codec.getCodec());
-		// s.setSampleRate(codec.getSampleRate());
-		// return s;
-		// }).subscribe(s -> {
-		// StationPlayingManager.setCurrentStationPlaying(s);
-		// AddEditButtonManager.getInstance().enableAdd(s);
-		// });
+		// calculate new codec
+		Observable.fromCallable(() -> radioPlayer.calculateCodec())//
+				.subscribeOn(Schedulers.from(executorService))//
+				.subscribe(oc -> oc.ifPresent(codecStream::onNext));
+		
+		statioStream.onNext(station);
 
 		enableStop();
 	}
@@ -177,11 +195,6 @@ public class RadioPlayerManager implements Initializable {
 	 * MP:	----m--m-----m-----m-----|-->
 	 * A :	-------a-----a-----a-----|-->
 	 * R :  ----r-----r-----r-----r--|-->
-	 * 
-	 * DI: -----D-----D-----D-----D--|-->
-	 *     XXXXX MERGE (A ^ R) XXXXXXX
-	 * PI:  ----I--I--I--I---I---|-->
-	 * CI:  ----C--C--C--C---C---|-->
 	 * </code>
 	 */
 	private void handleMediaObservable(Observable<MediaPlayerInformation> mediaObservable) {
@@ -227,7 +240,7 @@ public class RadioPlayerManager implements Initializable {
 		// reset RPE
 		RadioPlayerEntity.getInstance().setAlbum(emptyAlbum);
 		RadioPlayerEntity.getInstance().setRadio(emptyRadio);
-		
+
 		// notify stop
 		codecInfoObserver.onComplete();
 		labelsObserver.onComplete();
@@ -254,7 +267,7 @@ public class RadioPlayerManager implements Initializable {
 		playButton.setSelected(true);
 	}
 
-	public void setCodecInfoObserver(Observer<CodecInformation> observer) {
+	public void setCodecInfoObserver(Observer<Codec> observer) {
 		this.codecInfoObserver = observer;
 	}
 

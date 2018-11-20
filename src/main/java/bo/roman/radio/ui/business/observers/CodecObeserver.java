@@ -5,12 +5,12 @@ import static bo.roman.radio.utilities.LoggerUtils.logDebug;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import bo.roman.radio.player.model.Codec;
 import bo.roman.radio.ui.business.displayer.LabelsManager;
-import bo.roman.radio.ui.model.CodecInformation;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
-public class CodecObeserver implements Observer<CodecInformation> {
+public class CodecObeserver implements Observer<Codec> {
 	private final static Logger logger = LoggerFactory.getLogger(CodecObeserver.class);
 	private final LabelsManager labelsManager;
 
@@ -24,9 +24,9 @@ public class CodecObeserver implements Observer<CodecInformation> {
 	}
 
 	@Override
-	public void onNext(CodecInformation c) {
-		logDebug(logger, () -> "Codec changed:" + c.getCodec());
-		labelsManager.updateCodecLabel(c.getCodec());
+	public void onNext(Codec c) {
+		logDebug(logger, () -> "Codec changed:" + c);
+		labelsManager.updateCodecLabel(c);
 	}
 
 	@Override
