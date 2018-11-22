@@ -207,7 +207,7 @@ public class RadioPlayerManager implements Initializable {
 							.map(radio -> new Radio.Builder().name(radio).build())//
 							.ifPresent(radioStream::onNext);
 
-					ofNullable(mpi.getArtist())//
+					Album album = ofNullable(mpi.getArtist())//
 							.filter(StringUtils::exists)//
 							.flatMap(artist -> ofNullable(mpi.getSong())//
 									.filter(StringUtils::exists)//
@@ -215,7 +215,8 @@ public class RadioPlayerManager implements Initializable {
 											.artistName(artist)//
 											.songName(song)//
 											.build()))//
-							.ifPresent(albumStream::onNext);
+							.orElseGet(() -> new Album.Builder().songName(mpi.getSong()).build());
+					albumStream.onNext(album);
 				}, e -> onMediaError(e), () -> onMediaStop());
 	}
 
