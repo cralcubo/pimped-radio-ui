@@ -1,12 +1,16 @@
 package bo.roman.radio.ui.controller;
 
+import static bo.roman.radio.ui.business.StationPlayingManager.setCurrentStationPlaying;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import bo.radio.tuner.entities.Station;
 import bo.roman.radio.ui.Initializable;
+import bo.roman.radio.ui.business.AddEditButtonManager;
 import bo.roman.radio.ui.business.RadioDisplayerManager;
 import bo.roman.radio.ui.business.RadioPlayerManager;
+import bo.roman.radio.ui.business.StationPlayingManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -14,6 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 public class StreamInputController implements Initializable {
+	
 	private Stage dialogStage;
 	
 	@FXML
@@ -35,6 +40,7 @@ public class StreamInputController implements Initializable {
 	@FXML
 	private void handleOk() {
 		if(isInputValid()) {
+			AddEditButtonManager addEditManager = AddEditButtonManager.getInstance();
 			RadioPlayerManager rpm = RadioPlayerManager.getInstance();
 			Station station = new Station("NO_NAME", textArea.getText());
 			
@@ -42,6 +48,8 @@ public class StreamInputController implements Initializable {
 			RadioDisplayerManager.getInstance().reloadUI();
 			
 			rpm.play(station);
+			addEditManager.enableAdd(station);
+			setCurrentStationPlaying(station);
 			
 			dialogStage.close();
 		} else {

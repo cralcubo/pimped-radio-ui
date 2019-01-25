@@ -8,7 +8,6 @@ import static java.util.Optional.ofNullable;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 
@@ -61,7 +60,6 @@ public class RadioPlayerManager implements Initializable {
 	private PublishSubject<Album> albumStream;
 	private PublishSubject<Radio> radioStream;
 	private PublishSubject<Codec> codecStream;
-	private PublishSubject<Station> statioStream;
 
 	// Observers
 	private Observer<Codec> codecInfoObserver;
@@ -127,7 +125,6 @@ public class RadioPlayerManager implements Initializable {
 		albumStream = PublishSubject.create();
 		radioStream = PublishSubject.create();
 		codecStream = PublishSubject.create();
-		statioStream = PublishSubject.create();
 
 		albumStream.distinctUntilChanged()//
 				.flatMap(a -> fromCallable(() -> coverManager.getAlbumWithCover(a.getSongName(), a.getArtistName())//
@@ -153,26 +150,8 @@ public class RadioPlayerManager implements Initializable {
 				});
 
 		codecStream.subscribe(codecInfoObserver::onNext);
-
-		// zip codecStream and radioStream to update all the info of the current played
-		// station
-		Observable.zip(radioStream.distinctUntilChanged()//
-								  .filter(r -> !r.getName().matches("^https?:\\/\\/.+$"))//
-				, statioStream //
-				, codecStream //
-				, (r, s, codec) -> {
-			s.setName(r.getName()); 
-			s.setBitRate(codec.getBitRate());
-			s.setCodec(codec.getCodec());
-			s.setSampleRate(codec.getSampleRate());
-			s.setCategories(new ArrayList<>());
-			return s;
-		}).subscribe(s -> {
-			StationPlayingManager.setCurrentStationPlaying(s);
-			AddEditButtonManager.getInstance().enableAdd(s);
-		});
 	}
-
+	
 	public void play(Station station) {
 		// Get the media stream observable and subscribe to it
 		handleMediaObservable(radioPlayer.getMediaObservable());
@@ -184,8 +163,6 @@ public class RadioPlayerManager implements Initializable {
 		Observable.fromCallable(() -> radioPlayer.calculateCodec())//
 				.subscribeOn(Schedulers.from(executorService))//
 				.subscribe(oc -> oc.ifPresent(codecStream::onNext));
-		
-		statioStream.onNext(station);
 
 		enableStop();
 	}

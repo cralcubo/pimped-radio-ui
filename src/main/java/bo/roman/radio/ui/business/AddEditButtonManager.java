@@ -92,5 +92,4 @@ public class AddEditButtonManager implements Initializable {
 		//Disable addStation button.
 		addStation.setDisable(true);
 	}
-
 }
