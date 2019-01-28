@@ -66,8 +66,7 @@ public class StationPlayingManager {
 		LoggerUtils.logDebug(logger,
 				() -> String.format("Try [%d] to check information complete in %s", debugCounter, si));
 
-		if (exists(si.getName()) && exists(si.getCodec()) && exists(si.getStream()) && si.getBitRate() != 0f
-				&& si.getSampleRate() != 0f) {
+		if (exists(si.getName()) && exists(si.getStream())) {
 			return si;
 		}
 

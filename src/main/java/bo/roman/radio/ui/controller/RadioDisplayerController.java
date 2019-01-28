@@ -139,6 +139,8 @@ public class RadioDisplayerController {
 		if (play.isSelected()) {
 			final Station si = StationPlayingManager.getStationToPlay();
 			radioPlayerManager.play(si);
+			
+			StationPlayingManager.setCurrentStationPlaying(si);
 			// Enable Add Station button
 			addEditButtonManager.enableAdd(si);
 		} else {
