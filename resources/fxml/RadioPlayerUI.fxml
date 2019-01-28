@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.effect.Reflection?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -34,20 +36,29 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label fx:id="artistLabel" text="Artist" GridPane.rowIndex="2">
+            <Label fx:id="artistLabel" text="Artist" GridPane.rowIndex="2" textFill="#e0e0eb">
                <GridPane.margin>
-                  <Insets left="10.0" />
+                  <Insets left="10.0" top="45.0" />
                </GridPane.margin>
+               <font>
+                  <Font size="8.0" />
+               </font>
             </Label>
-            <Label fx:id="songLabel" text="Song" GridPane.rowIndex="2">
+            <Label fx:id="songLabel" text="Song" GridPane.rowIndex="2" textFill="#e1e1eb">
                <GridPane.margin>
-                  <Insets left="10.0" top="30.0" />
+                  <Insets left="10.0" top="23.0" />
                </GridPane.margin>
+               <font>
+                  <Font name="System Bold" size="10.0" />
+               </font>
             </Label>
-            <Label fx:id="radioLabel" text="Radio" GridPane.rowIndex="2">
+            <Label fx:id="radioLabel" text="Radio" GridPane.rowIndex="2" textFill="#e0e0eb">
                <GridPane.margin>
-                  <Insets left="10.0" top="60.0" />
+                  <Insets left="10.0" top="65.0" />
                </GridPane.margin>
+               <font>
+                  <Font size="8.0" />
+               </font>
             </Label>
          </children>
       </GridPane>

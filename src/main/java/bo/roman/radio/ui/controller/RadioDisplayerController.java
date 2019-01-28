@@ -2,7 +2,6 @@ package bo.roman.radio.ui.controller;
 
 import static java.util.Arrays.asList;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -121,7 +120,7 @@ public class RadioDisplayerController {
 				addEditButtonManager, //
 				displayerManager, //
 				dockManager,
-				labelsManager);
+				subInfoLabelsManager);
 		controllers.forEach(Initializable::initialize);
 
 		// Initialize Tuner Database
