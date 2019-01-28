@@ -14,23 +14,25 @@ public class RadioDisplayerManager implements Initializable {
 	private final NodeFader fader = new NodeFader(200);
 	
 	private GridPane controlsPane;
+	private GridPane subInfoPane;
 	
 	private static RadioDisplayerManager instance;
 	
-	private RadioDisplayerManager(GridPane controlsPane) {
+	private RadioDisplayerManager(GridPane controlsPane, GridPane subInfoPane) {
 		this.controlsPane = controlsPane;
+		this.subInfoPane = subInfoPane;
 	}
 	
 	public static RadioDisplayerManager getInstance() {
-		return getInstance(null);
+		return getInstance(null, null);
 	}
 	
-	public static RadioDisplayerManager getInstance(GridPane controlsPane) {
+	public static RadioDisplayerManager getInstance(GridPane controlsPane, GridPane subInfoPane) {
 		if(instance == null) {
 			if(controlsPane == null) {
 				throw new IllegalStateException("A new instance of RadioDisplayerManager was tried to be created, but no GridPane was provided.");
 			}
-			instance = new RadioDisplayerManager(controlsPane);
+			instance = new RadioDisplayerManager(controlsPane, subInfoPane);
 		}
 		return instance;
 	}
@@ -44,12 +46,16 @@ public class RadioDisplayerManager implements Initializable {
 		CoverArtManager.getInstance().shadeIt(fader);
 		// Make Player Controls and Song Info appear 
 		fader.fadeNode(MINOPACITY_INFO, MAXOPACITY_INFO, controlsPane);
+		// Make subInfo disappear
+		fader.fadeNode(MAXOPACITY_INFO, MINOPACITY_INFO, subInfoPane);
 	}
 	
 	public void clearPlayerInformation() {
 		CoverArtManager.getInstance().clearIt(fader);
 		// Make Player Controls and Song Info disappear
 		fader.fadeNode(MAXOPACITY_INFO, MINOPACITY_INFO, controlsPane);
+		// Make subInfo appear
+		fader.fadeNode(MINOPACITY_INFO, MAXOPACITY_INFO, subInfoPane);
 	}
 	
 	public void unblurPlayerInformation() {

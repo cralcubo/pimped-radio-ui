@@ -53,9 +53,7 @@ public class SubInfoLabelsManager implements Initializable, Updateable {
 	public void initialize() {
 		artistLabel.setText("");
 		songLabel.setText("");
-		
 		radioLabel.setText("");
-		
 	}
 
 	@Override
@@ -64,21 +62,25 @@ public class SubInfoLabelsManager implements Initializable, Updateable {
 
 		String song = oe.map(RadioPlayerEntity::getAlbum)//
 				.map(Album::getSongName)//
-				.filter(StringUtils::exists)//
-				.orElse("...");
+				.orElse(null);
 		String artist = oe.map(RadioPlayerEntity::getAlbum)//
 				.map(Album::getArtistName)//
-				.filter(StringUtils::exists)//
-				.orElse("...");
+				.orElse(null);
 		String radio = oe.map(RadioPlayerEntity::getRadio)//
 				.map(Radio::getName)//
 				.filter(StringUtils::exists)//
 				.orElse(PIMPED_RADIO);
 		Platform.runLater(() -> {
-			artistLabel.setText(labelFormatter.apply(artist));
-			songLabel.setText(labelFormatter.apply(song));
-			radioLabel.setText(labelFormatter.apply(radio));
+			displayer(artistLabel, artist);
+			displayer(songLabel, song);
+			displayer(radioLabel, radio);
 		});
+	}
+	
+	private void displayer(Label label, String val) {
+		boolean valExists = StringUtils.exists(val);
+		label.setVisible(valExists);
+		label.setText(valExists ? labelFormatter.apply(val) : "");
 	}
 
 }

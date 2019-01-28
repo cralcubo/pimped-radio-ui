@@ -59,6 +59,8 @@ public class RadioDisplayerController {
 	private Rectangle coverShader;
 	@FXML
 	private GridPane controlsPane;
+	@FXML
+	private GridPane subInfoPane;
 
 	@FXML
 	private Button close;
@@ -112,7 +114,7 @@ public class RadioDisplayerController {
 		radioPlayerManager.setSubInfoObserver(new PimpedRadioObserver<SubInfoLabelsManager>(subInfoLabelsManager));
 		
 		addEditButtonManager = AddEditButtonManager.getInstance(addEditStation);
-		displayerManager = RadioDisplayerManager.getInstance(controlsPane);
+		displayerManager = RadioDisplayerManager.getInstance(controlsPane, subInfoPane);
 
 		List<Initializable> controllers = asList(coverArtManager, //
 				labelsManager, //
