@@ -16,7 +16,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane onMouseEntered="#onMouseEntered" onMouseExited="#onMouseExited" prefHeight="270.0" prefWidth="270.0" stylesheets="@../cover-displayer.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bo.roman.radio.ui.controller.RadioDisplayerController">
+<StackPane onMouseEntered="#onMouseEntered" onMouseExited="#onMouseExited" prefHeight="270.0" prefWidth="270.0" stylesheets="@../cover-displayer.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bo.roman.radio.ui.controller.RadioDisplayerController">
 	<children>
 		<ImageView fx:id="coverViewer" fitHeight="270.0" fitWidth="270.0" pickOnBounds="true" preserveRatio="true">
 			<effect>
@@ -34,17 +34,17 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Artist" GridPane.rowIndex="2">
+            <Label fx:id="artistLabel" text="Artist" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Song" GridPane.rowIndex="2">
+            <Label fx:id="songLabel" text="Song" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="10.0" top="30.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Radio" GridPane.rowIndex="2">
+            <Label fx:id="radioLabel" text="Radio" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="10.0" top="60.0" />
                </GridPane.margin>

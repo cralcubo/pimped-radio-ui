@@ -1,5 +1,7 @@
 package bo.roman.radio.ui.controller;
 
+import static java.util.Arrays.asList;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -18,6 +20,7 @@ import bo.roman.radio.ui.business.StationPlayingManager;
 import bo.roman.radio.ui.business.displayer.CoverArtManager;
 import bo.roman.radio.ui.business.displayer.DockInfoManager;
 import bo.roman.radio.ui.business.displayer.LabelsManager;
+import bo.roman.radio.ui.business.displayer.SubInfoLabelsManager;
 import bo.roman.radio.ui.business.observers.CodecObeserver;
 import bo.roman.radio.ui.business.observers.PimpedRadioObserver;
 import bo.roman.radio.ui.business.tuner.TunerManager;
@@ -44,6 +47,7 @@ public class RadioDisplayerController {
 	private LabelsManager labelsManager;
 	private AddEditButtonManager addEditButtonManager;
 	private RadioDisplayerManager displayerManager;
+	private SubInfoLabelsManager subInfoLabelsManager;
 
 	private App mainApp;
 
@@ -69,7 +73,10 @@ public class RadioDisplayerController {
 	private Slider volume;
 	@FXML
 	private RadioButton pinInfo;
-
+	
+	/*
+	 * Main info labels
+	 */
 	@FXML
 	private Label mainLabel;
 	@FXML
@@ -78,6 +85,17 @@ public class RadioDisplayerController {
 	private Label extraLabel;
 	@FXML
 	private Label codecLabel;
+	
+	/*
+	 * Sub info labels
+	 */
+	@FXML
+	private Label artistLabel;
+	@FXML
+	private Label songLabel;
+	@FXML
+	private Label radioLabel;
+	
 
 	@FXML
 	private void initialize() {
@@ -85,21 +103,25 @@ public class RadioDisplayerController {
 		coverArtManager = CoverArtManager.getInstance(coverViewer, coverShader);
 		labelsManager = LabelsManager.getInstance(mainLabel, subLabel, extraLabel, codecLabel);
 		radioPlayerManager = RadioPlayerManager.getInstance(volume, play);
+		subInfoLabelsManager = SubInfoLabelsManager.getInstance(artistLabel, songLabel, radioLabel);
+		
 		// Add observers to the radioPlayerManager
 		radioPlayerManager.setCodecInfoObserver(new CodecObeserver(labelsManager));
 		radioPlayerManager.setCoverObserver(new PimpedRadioObserver<CoverArtManager>(coverArtManager));
 		radioPlayerManager.setLabelsObserver(new PimpedRadioObserver<LabelsManager>(labelsManager));
 		radioPlayerManager.setDockObserver(new PimpedRadioObserver<DockInfoManager>(dockManager));
+		radioPlayerManager.setSubInfoObserver(new PimpedRadioObserver<SubInfoLabelsManager>(subInfoLabelsManager));
 		
 		addEditButtonManager = AddEditButtonManager.getInstance(addEditStation);
 		displayerManager = RadioDisplayerManager.getInstance(controlsPane);
 
-		List<Initializable> controllers = Arrays.asList(coverArtManager, //
+		List<Initializable> controllers = asList(coverArtManager, //
 				labelsManager, //
 				radioPlayerManager, //
 				addEditButtonManager, //
 				displayerManager, //
-				dockManager);
+				dockManager,
+				labelsManager);
 		controllers.forEach(Initializable::initialize);
 
 		// Initialize Tuner Database

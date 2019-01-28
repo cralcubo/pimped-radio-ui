@@ -28,6 +28,7 @@ import bo.roman.radio.ui.Initializable;
 import bo.roman.radio.ui.business.displayer.CoverArtManager;
 import bo.roman.radio.ui.business.displayer.DockInfoManager;
 import bo.roman.radio.ui.business.displayer.LabelsManager;
+import bo.roman.radio.ui.business.displayer.SubInfoLabelsManager;
 import bo.roman.radio.ui.business.observers.PimpedRadioObserver;
 import bo.roman.radio.ui.model.RadioPlayerEntity;
 import bo.roman.radio.utilities.ResourceFinder;
@@ -66,6 +67,7 @@ public class RadioPlayerManager implements Initializable {
 	private PimpedRadioObserver<LabelsManager> labelsObserver;
 	private PimpedRadioObserver<CoverArtManager> coverObserver;
 	private PimpedRadioObserver<DockInfoManager> dockObserver;
+	private PimpedRadioObserver<SubInfoLabelsManager> subInfoObserver;
 
 	private final ExecutorService executorService = fixedThreadPoolFactory(3);
 
@@ -134,6 +136,7 @@ public class RadioPlayerManager implements Initializable {
 					logDebug(logger, () -> "Album changed:" + a.toString());
 					radioPlayerEntity.setAlbum(a);
 					labelsObserver.onNext(radioPlayerEntity);
+					subInfoObserver.onNext(radioPlayerEntity);
 					coverObserver.onNext(radioPlayerEntity);
 				});
 
@@ -145,6 +148,7 @@ public class RadioPlayerManager implements Initializable {
 					logDebug(logger, () -> "Radio changed:" + r.toString());
 					radioPlayerEntity.setRadio(r);
 					labelsObserver.onNext(radioPlayerEntity);
+					subInfoObserver.onNext(radioPlayerEntity);
 					coverObserver.onNext(radioPlayerEntity);
 					dockObserver.onNext(radioPlayerEntity);
 				});
@@ -259,6 +263,10 @@ public class RadioPlayerManager implements Initializable {
 
 	public void setDockObserver(PimpedRadioObserver<DockInfoManager> dockObserver) {
 		this.dockObserver = dockObserver;
+	}
+
+	public void setSubInfoObserver(PimpedRadioObserver<SubInfoLabelsManager> subInfoObserver) {
+		this.subInfoObserver = subInfoObserver;
 	}
 
 }
