@@ -36,20 +36,20 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label fx:id="artistLabel" text="Artist" GridPane.rowIndex="2" textFill="#e0e0eb">
+         	<Label fx:id="artistLabel" text="Song" GridPane.rowIndex="2" textFill="#e0e0eb">
                <GridPane.margin>
-                  <Insets left="10.0" top="45.0" />
+                  <Insets left="10.0" top="19.0" />
                </GridPane.margin>
                <font>
-                  <Font size="8.0" />
+			      <Font size="8.0" />            
                </font>
             </Label>
-            <Label fx:id="songLabel" text="Song" GridPane.rowIndex="2" textFill="#e1e1eb">
+            <Label fx:id="songLabel" text="Artist" GridPane.rowIndex="2" textFill="e1e1eb">
                <GridPane.margin>
-                  <Insets left="10.0" top="23.0" />
+                  <Insets left="10.0" top="43.0" />
                </GridPane.margin>
                <font>
-                  <Font name="System Bold" size="10.0" />
+               	  <Font name="System Bold" size="10.0" />
                </font>
             </Label>
             <Label fx:id="radioLabel" text="Radio" GridPane.rowIndex="2" textFill="#e0e0eb">

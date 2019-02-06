@@ -3,6 +3,7 @@ package bo.roman.radio.ui.business.displayer;
 import static java.lang.String.format;
 
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import bo.roman.radio.cover.model.Album;
@@ -29,16 +30,16 @@ public class SubInfoLabelsManager implements Initializable, Updateable {
 	private static SubInfoLabelsManager instance;
 
 	private SubInfoLabelsManager(Label artistLabel, Label songLabel, Label radioLabel) {
-		Background background = new Background(new BackgroundFill(new Color(0, 0, 0, 0.6), new CornerRadii(3), Insets.EMPTY));
-		
-		this.artistLabel = artistLabel;
-		this.artistLabel.setBackground(background);
+		Function<CornerRadii, Background> bg = cr ->  new Background(new BackgroundFill(new Color(0, 0, 0, 0.6), cr, Insets.EMPTY));
 		
 		this.songLabel = songLabel;
-		this.songLabel.setBackground(background);
+		this.songLabel.setBackground(bg.apply(new CornerRadii(0, 3, 3, 0, false)));
+		
+		this.artistLabel = artistLabel;
+		this.artistLabel.setBackground(bg.apply(new CornerRadii(3, 3, 3, 0, false)));
 		
 		this.radioLabel = radioLabel;
-		this.radioLabel.setBackground(background);
+		this.radioLabel.setBackground(bg.apply(new CornerRadii(0, 3, 3, 3, false)));
 		
 	}
 

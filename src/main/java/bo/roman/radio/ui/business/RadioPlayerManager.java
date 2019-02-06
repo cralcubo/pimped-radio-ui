@@ -212,6 +212,7 @@ public class RadioPlayerManager implements Initializable {
 		labelsObserver.onError(e);
 		coverObserver.onError(e);
 		dockObserver.onError(e);
+		subInfoObserver.onError(e);
 
 		// stop the player
 		stop();
@@ -228,6 +229,7 @@ public class RadioPlayerManager implements Initializable {
 		labelsObserver.onComplete();
 		coverObserver.onComplete();
 		dockObserver.onComplete();
+		subInfoObserver.onComplete();
 	}
 
 	public void close() {
