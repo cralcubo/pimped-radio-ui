@@ -5,7 +5,7 @@
 
 	<groupId>bo.roman.radio</groupId>
 	<artifactId>pimped-radio-ui</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.1</version>
 	<packaging>jar</packaging>
 
 	<name>pimped-radio-ui</name>
@@ -31,7 +31,7 @@
 		<xerces.version>2.11.0</xerces.version>
 		<controls.fx.version>8.40.12</controls.fx.version>
 		<javafx.maven.version>8.7.0</javafx.maven.version>
-		<radio.player.version>1.1.0</radio.player.version>
+		<radio.player.version>1.1.1</radio.player.version>
 		<radio.tuner.version>1.0.1</radio.tuner.version>
 		<rxjava.version>2.1.17</rxjava.version>
 		<rxjavafx.version>2.2.2</rxjavafx.version>
