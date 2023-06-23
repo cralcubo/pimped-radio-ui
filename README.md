@@ -12,6 +12,7 @@ Technologies to be used
 -----------------------
 JavaFX
 
-Changes Introduced in v1.0.1
----------------------------
-- New radio button to keep Album information and Radio player controllers visible. 
+To run the project
+------------------
+mvn clean javafx:run
+ 
